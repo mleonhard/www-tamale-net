@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Yaws Uploads - tamale.net</title>
@@ -107,7 +107,7 @@
 <p>
   The script below is based on upload.yaws from Yaws 1.57.
   The tricky parts are <em>multipart/2</em> and <em>process_part/3</em>.
-  You can downlaod it as <a href="upload2.yaws">upload2.yaws</a>.  It is
+  You can downlaod it as <a href="https://github.com/mleonhard/www-tamale-net/blob/main/erlang/upload2.yaws">upload2.yaws</a>.  It is
   provided under the same license as Yaws.
   </p>
 

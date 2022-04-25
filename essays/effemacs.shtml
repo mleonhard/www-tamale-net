@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<html lang="en">
 <head>
 	<title>Effective Emacs</title>
 	</head>
@@ -94,7 +94,7 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layout <p>
 
 Click on the KeyboardLayout entry to give it the focus.  Make sure it
 has the focus and not one of its children.  Then from the Edit menu,
-choose New Binary Value, and name it <font color="royalblue">Scancode Map</font>.
+choose New Binary Value, and name it <span style="color: royalblue; ">Scancode Map</span>.
 It should show as type REG_BINARY. <p>
 
 Then select the new Scancode Map entry you just created, and from the Edit
@@ -165,9 +165,9 @@ invoking M-x involves pressing and holding Ctrl, typing x, then typing m. <p>
 To enable the Ctrl-x Ctrl-m sequence add the following lines to your .emacs
 file:
 
-<font size="+1"><pre>(global-set-key <font color="#4169e1">"\C-x\C-m"</font> 'execute-extended-command)
-(global-set-key <font color="#4169e1">"\C-c\C-m"</font> 'execute-extended-command)
-</pre></font><p>
+<pre>(global-set-key "\C-x\C-m" 'execute-extended-command)
+(global-set-key "\C-c\C-m" 'execute-extended-command)
+</pre><p>
 
 I add the second line so that Ctrl-c Ctrl-m will also invoke it, which
 makes the key sequence even more forgiving.  If I miss Ctrl-x and hit
@@ -200,10 +200,10 @@ painstakingly backspace to your error.  <p>
 
 Here's what you add to your .emacs file: <p>
 
-<font size="+1"><pre>(global-set-key <font color="#4169e1">"\C-w"</font>     'backward-kill-word)
-(global-set-key <font color="#4169e1">"\C-x\C-k"</font> 'kill-region)
-(global-set-key <font color="#4169e1">"\C-c\C-k"</font> 'kill-region)
-</pre></font><p>
+<pre>(global-set-key "\C-w"     'backward-kill-word)
+(global-set-key "\C-x\C-k" 'kill-region)
+(global-set-key "\C-c\C-k" 'kill-region)
+</pre><p>
 
 Note that because Ctrl-w was already bound to kill-region, a very
 important command, you need to re-bind something else to kill-region.
@@ -460,7 +460,7 @@ Turn them all off with the following code in your .emacs file: <p>
 You won't miss any of it.  We'll cover how to find your way around
 in the next tip. <p>
 
-<font color="red">(Notes added Jan 2nd, 2006)</font> I recently saw a
+<span style="color: red; ">(Notes added Jan 2nd, 2006)</span> I recently saw a
 comment from a person who hated this entire essay because of tip #7.
 The person expressed a great deal of disgruntlement, evidently being
  quite attached to his or her mouse and menus, and took affront to
@@ -626,9 +626,9 @@ buffer, which shows about 200 available commands with the word "buffer"
 in the command name.  Near the top is a command, bury-buffer, whose
 documentation says: <p>
 
-<font size="+1"><pre><font color="#b22222">bury-buffer</font>       <font color="#006400">            M-x bury-buffer RET</font>
-  <font color="#0000cd">Command:</font> Put BUFFER at the end of the list of all buffers.
-</pre></font> <p>
+<pre>bury-buffer                   M-x bury-buffer RET
+  Command: Put BUFFER at the end of the list of all buffers.
+</pre> <p>
 
 Et voila.  Just the command you were looking for.  You can easily
 winnow the search through large lists by specifying a more restrictive
@@ -685,9 +685,9 @@ replacement. <p>
 I use query-replace-regexp so frequently that I have an alias
 for it: <p>
 
-<font size="+1"><pre>(<font color="#0000cd">defalias</font> '<font color="#b22222">qrr</font> 'query-replace-regexp)
+<pre>(defalias 'qrr 'query-replace-regexp)
 
-</pre></font> <p>
+</pre> <p>
 
 That way I can type M-x qrr to invoke the function. <p>
 
@@ -1095,7 +1095,7 @@ plllleeeeasssseee see your .emacs file :) <br />
 <em>Posted by: Charles G. at February 18, 2005 01:47 AM</em> <p>
 <hr />
 
-<em><p> On March 4 2006, Luke Gorrie wrote: </p></em>
+<p><em>On March 4 2006, Luke Gorrie wrote:</em></p>
 
 <p> Howdy, </p>
 
@@ -1115,7 +1115,7 @@ at stake. </p>
 
 <p><hr /><p>
 
-<em><p> On March 5 2006, Anupam Kapoor wrote: </p></em>
+<p><em> On March 5 2006, Anupam Kapoor wrote:</em></p>
 
 <pre>
 hi,
@@ -1139,7 +1139,7 @@ anupam
 
 <p><hr /><p>
 
-<em><p> On March 9 2006, Scott Anderson wrote: </p></em>
+<p><em>On March 9 2006, Scott Anderson wrote:</em></p>
 
 <pre>
 Steve,
