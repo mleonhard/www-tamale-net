@@ -198,7 +198,7 @@ and grants access to the account with the matching certificate.
 
 The hosting service is strictly prepaid.
 When you let the account balance go to zero, you are closing the account.
-The API should stop your server and deletes its data.
+The service stops your server and deletes its data.
 
 You should set up monitoring and a low-balance alert.
 
