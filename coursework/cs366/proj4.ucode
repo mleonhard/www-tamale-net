@@ -1,0 +1,128 @@
+// proj4.ucode (Project 4 Microcode)
+// Michael Leonhard (mleonhar)
+// CS366 Fall 2005, Professor Khokhar
+// TA: Mani Radhakrishnan
+// MythSim 3.1.1 on Windows XP SP2, Java SDK 1.5.0_04
+// 2005-11-15
+//
+// Status: All requirements of the assignment description are implemented.
+// 
+// Notes:
+// 
+// The program description states that we must write a "store word to memory"
+// operation:  SWM ri, OFFSET(rj)          ri -> MEM[rj + OFFSET]
+// There is a problem with the definition.  The register ri may only specify
+// a register to write into.  It may not specify a source register.  Thus I am
+// implementing the operation by substituting rk for ri:
+//   SWM rk, OFFSET(rj)          rk -> MEM[rj + OFFSET]
+// All of the other required operations are implemented as required.
+// 
+// The parser has a bug: if the memory file comment contains a colon, the
+// parser will crash with NumberFormatException.  This is likely a bug in
+// the grammar definition.  Comments should be ignored.  Everything from the
+// "//" characters to the "\n" should be completely ignored by the parser.
+// 
+// Similarly, beginning a line with a colon ":" symbol yields a
+// NumberFormatException.  One would hope to receive a syntax error.
+// 
+// Another bug: MythSim allows this abiguous microcode instruction:
+// opcode9.2: rk_sel, b_sel=6, alu_sel=ADD, r6_write, goto opcode9.2;
+//            ^^^^^^  ^^^^^  rk_sel will silently take precedence over b_sel
+//  
+// The algorithm presented in the assignment description is:
+// 		RESULT := 0
+// 		for 1 to MULTIPLIER do
+// 		RESULT := RESULT + MULTIPLICAND;
+// This algorithm ignores the possibility that the multiplier is 0.  Changing
+// the loop to range from 0 to MULTIPLIER solves this problem.  This program
+// implements this solution.
+// 
+// TESTING
+// Basic testing was performed by running the program with various combinations
+// of inputs and the results was checked.
+// (7,0) (0,7) (100,10) (21,10) (0,0) (7,18) (18,7) (1,0) (0,1) (0,-1) (-1,0)
+// (1,-1) (-1,1)
+
+//////////////////////////////////////////////////////////////////////////////
+// Microcode Definitions
+//////////////////////////////////////////////////////////////////////////////
+
+// ========= FETCH =========
+// Fetch performs the following operations:
+// MAR <-- R7, R6 <-- R7
+// R7 <-- R6 + 1, IR0 <-- Mem[MAR]
+// MAR <-- R7, R6 <-- R7
+// R7 <-- R6 + 1, IR1 <-- Mem[MAR]
+// After the fetch, the IR holds the new instruction and R7 points to the
+// first byte of the next instruction.
+fetch0: a_sel=7, b_sel=7, alu_sel=AND, r6_write, mar_sel=LOAD;
+fetch1: a_sel=6, c_in, alu_sel=ADDA, r7_write, ir0_sel=LOAD, read, if wait then goto fetch1 endif;
+fetch2: a_sel=7, b_sel=7, alu_sel=AND, r6_write, mar_sel=LOAD;
+fetch3: a_sel=6, c_in, alu_sel=ADDA, r7_write, ir1_sel=LOAD, read, if wait then goto fetch3 endif;
+
+// =========OPCODES=========
+// 0) HALT
+// 1) LI: ri <- const8
+// 2) JF: r7 <- r7 + rj
+// 3) ADD: ri <- rj + rk
+// 4) BE: if rj == rk then r7 <- r7 + const4 (supports only positive distance, up to 16 bytes)
+// 5) JI: r7 <- r7 + const8
+// 6) NOP
+// 7) LDM: ri <- Mem[rj + const4] (supports only positive offset because there is no sign extender for const4)
+// 8) SWM: rk -> Mem[rj + const4]        ""
+// 9) ADDM: ri <- rj + Mem[rk + const4]  ""
+//10) SUBM: ri <- rj - Mem[rk + const4]  ""
+//11) ADDI: ri <- rj + const4
+//12) MOVE: ri <- rj
+
+switch:	   goto opcode[IR_OPCODE];
+opcode[0]: goto opcode[0];//HALT
+opcode[1]: result_sel=IR_CONST8, ri_sel, goto fetch0;//LOAD_IMM
+opcode[2]: rj_sel, alu_sel=ADDA, r7_write, goto fetch0;//J
+opcode[3]: ri_sel, rj_sel, rk_sel, alu_sel=ADD, goto fetch0;//ADD
+opcode[4]: rj_sel, rk_sel, c_in, alu_sel=SUB, r6_write, goto opcode4.1;//BE, r6 <- rj - rk
+opcode[5]: result_sel=IR_CONST8, r6_write, goto opcode5.1;//JI, r6 <- const8
+opcode[6]: goto fetch0;//NOP
+opcode[7]: result_sel=IR_CONST4, r6_write, goto opcode7.1;//LDM, r6 <- const4
+opcode[8]: result_sel=IR_CONST4, r6_write, goto opcode8.1;//SWM, r6 <- const4
+opcode[9]: result_sel=IR_CONST4, r6_write, goto opcode9.1;//ADDM, r6 <- const4
+opcode[10]: result_sel=IR_CONST4, r6_write, goto opcode10.1;//ADDM, r6 <- const4
+opcode[11]: result_sel=IR_CONST4, r6_write, goto opcode11.1;//ADDI, r6 <- const4
+opcode[12]: ri_sel, rj_sel, alu_sel=ADDA, goto fetch0;//MOVE, ri <- rj
+
+// test if r6 is zero: subtract 1 from r6, if no underflow then r6 > 0
+opcode4.1: a_sel=6, alu_sel=SUBA, if c_out then goto fetch0 else goto opcode4.2 endif;
+opcode4.2: result_sel=IR_CONST4, r6_write, goto opcode4.3; // r6 <- const4
+opcode4.3: a_sel=7, b_sel=6, alu_sel=ADD, r7_write, goto fetch0; // r7 <- r7 + r6
+
+opcode5.1: a_sel=6, b_sel=7, alu_sel=ADD, r7_write,	goto fetch0; // r7 <- r7 + r6
+
+opcode7.1: rj_sel, b_sel=6, alu_sel=ADD, r6_write, goto opcode7.2; // r6 = r6 + rj
+opcode7.2: a_sel=6, b_sel=6, alu_sel=AND, mar_sel=LOAD, goto opcode7.3; // Addr = r6
+opcode7.3: read, mdr_sel=LOAD_MEM,			// read memory 
+		if wait then goto opcode7.3 endif;	// wait for memory
+		result_sel=MDR, ri_sel, goto fetch0;	// ri <- Mem[Addr]
+
+opcode8.1: rj_sel, b_sel=6, alu_sel=ADD, r6_write, goto opcode8.2; // r6 = r6 + rj
+opcode8.2: a_sel=6, b_sel=6, alu_sel=AND, mar_sel=LOAD, goto opcode8.3; // Addr = r6
+opcode8.3: a_sel=5, b_sel=5, alu_sel=XOR, r5_write; 				// r5 <- 0
+		rk_sel, a_sel=5, alu_sel=OR, mdr_sel=LOAD_ALU; 			// Mem[Addr] <- rk
+memwrite: write, if wait then goto memwrite else goto fetch0 endif;// wait for memory
+		
+opcode9.1: a_sel=6, rk_sel, alu_sel=ADD, r6_write, goto opcode9.2; // r6 = r6 + rk
+opcode9.2: a_sel=6, b_sel=6, alu_sel=AND, mar_sel=LOAD, goto opcode9.3; // Addr = r6
+opcode9.3: read, mdr_sel=LOAD_MEM,			// read memory 
+		if wait then goto opcode9.3 endif;	// wait for memory
+		result_sel=MDR, r6_write, goto opcode9.4;// r6 <- Mem[Addr]
+opcode9.4: rj_sel, b_sel=6, alu_sel=ADD, ri_sel, goto fetch0; // ri <- rj + r6
+
+opcode10.1: a_sel=6, rk_sel, alu_sel=ADD, r6_write, goto opcode10.2; // r6 = r6 + rk
+opcode10.2: a_sel=6, b_sel=6, alu_sel=AND, mar_sel=LOAD, goto opcode10.3; // Addr = r6
+opcode10.3: read, mdr_sel=LOAD_MEM,					// read memory 
+		if wait then goto opcode10.3 endif;			// wait for memory
+		result_sel=MDR, r6_write, goto opcode10.4;	// r6 <- Mem[Addr]
+opcode10.4: rj_sel, b_sel=6, alu_sel=SUB, c_in, ri_sel, goto fetch0; // ri <- rj - r6
+
+opcode11.1: rj_sel, b_sel=6, alu_sel=ADD, ri_sel, goto fetch0; // ri = rj + r6
+
+// end of proj4.ucode

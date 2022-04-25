@@ -1,0 +1,337 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Effective Coding on Unix - tamale.net</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+<div class=page>
+
+<h1>Effective Coding on Unix</h1>
+
+<p><a href="/">Home</a></p>
+
+<p>Updated 2006-10-04</p>
+
+<p>In this article, I will explain how I code on unix.</p>
+
+<h2 id="unix">Use a unix Computer</h2>
+<p>
+  Store your source code and compile it on a unix computer.  It will be your <em>development server</em>.  I recommend using a popular version of Linux:
+  <a href="http://www.gentoo.org/">Gentoo</a>,
+  <a href="http://www.debian.org/">Debian</a>,
+  or <a href="http://www.ubuntu.com/">Ubuntu</a>.
+  I don't think that Cygwin makes a good development platform.
+  </p>
+
+<p>
+  Avoid sysadmin work.  Use a computer that somebody else manages.  If you're a university student then get a shell account on the university's system.  If you're a
+  <a href="http://www.cs.uic.edu/">UIC CS</a> student then use <em>oscar.cs.uic.edu</em>.
+  </p>
+
+<h2 id="putty">Use PuTTY</h2>
+
+<p>
+  If you already have a Linux workstation or a Mac with OS X then you can run ssh from a terminal to connect to your development server.
+  On Windows, use the free SSH client, 
+  <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/">PuTTY</a>.
+  Follow these instructions to install it properly on Windows XP&trade;:
+  </p>
+
+<ol>
+ <li>
+   Go to the <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html">PuTTY Download</a> page.
+   Download the "Windows-style installer".  At the time of this writing, it is called <em>putty-0.58-installer.exe</em>.
+   </li>
+ <li>
+   Run the installer.  Install with the default options.  This puts the PuTTY files into <em>C:\Program Files\PuTTY</em>
+   </li>
+ <li>
+   The pscp.exe program must appear on the path for it to be useful.
+   Configure the PATH environment variable:
+   <ol>
+     <li>
+       Right-click on <em>My Computer</em> and choose <em>Properties</em>.
+       The System Properties dialog box will appear.
+       </li>
+     <li>Click the <em>Advanced</em> tab.</li>
+     <li>
+       Click the <em>Environment Variables</em> button at the bottom.
+       The Environment Variables dialog box will appear.
+       </li>
+     <li>
+       Under <em>System variables</em>, scroll down and select
+       <em>Path</em>.
+       </li>
+     <li>
+       Click the <em>Edit</em> button.
+       The Edit System Variable dialog box will appear.
+       </li>
+     <li>
+       Click in the box labeled <em>Variable value:</em> and
+       press the End button on your keyboard to go to the end of the text.
+       </li>
+     <li>
+       Type <em>;C:\Program Files\PuTTY;</em> at the end of the text.
+       The semicolons are important!
+       </li>
+     <li>Click OK to save changes to the Path variable.</li>
+     <li>Click OK to close the Environment Variables dialog box.</li>
+     <li>Click OK to close the System Properties dialog box.</li>
+   </ol>
+   </li>
+ <li>
+   Make a shortcut to your development server, <em>oscar.cs.uic.edu</em>:
+   <ol>
+     <li>
+       Open My Computer and navigate to
+       <em>C:\Program Files\PuTTY</em>.
+       </li>
+     <li>Press <em>Alt-F-W-S</em> to open the Create Shortcut wizard.</li>
+     <li>Type <em>putty oscar.cs.uic.edu</em> and hit Enter.</li>
+     <li>
+       Type <em>oscar.cs.uic.edu</em> as the name of the 
+       shortcut and hit Enter to finish creating the shortcut.
+       </li>
+     <li>Press <em>Alt-F-I</em> to add it to the Start Menu.</li>
+   </ol>
+ </li>
+</ol>
+
+<p>
+  PuTTY comes with good default settings.
+  Commands and settings are available by clicking the icon in the upper-left corner of the window, just left of the title bar.  I like to increase the Font size and maximize the window.
+</p>
+
+<p>
+   You can get full-screen mode with ALT-Enter.
+   This makes the PuTTY window take up the entire screen.
+   It looks just like your computer is the development server.
+   Turn on the ALT-Enter shortcut key like this:
+   </p>
+
+<ul>
+    <li>Click the tiny icon in the upper-left corner of the PuTTY window</li>
+    <li>Choose Change Settings</li>
+    <li>In the tree on the left, select Window / Behavior</li>
+    <li>Check the box next to "Full screen on Alt-Enter"</li>
+    <li>Click the Apply button</li>
+    </ul>
+
+<p>
+   To make your changes stick in the program,
+   you need to save over PuTTY's default settings:
+   </p>
+
+<ul>
+    <li>Click the tiny icon in the upper-left corner of the PuTTY window</li>
+    <li>Session should already be selected on the left side</li>
+    <li>"Default Settings" should already be selected on the right side</li>
+    <li>Click the Save button</li>
+    <li>Click the Apply button</li>
+    </ul>
+
+<h2 id="tabcompletion">Use Tab-Completion</h2>
+<p>All decent unix shells can interpret the tab key to complete a partially typed filename.  With tab-completion, one can manage files very effectively.  It is much faster than using a using a mouse and graphical file manager.
+<ul>
+  <li>Single tab to complete - complete match appears with a space after</li>
+  <li>partial match - no space</li>
+  <li>after partial match, double tab prints out candidates</li>
+  <li>Tcsh</li>
+  <li>Bash - on by default</li>
+  <li>Name your files so tab completion is easy.</li>
+  <li>all lowercase</li>
+  </ul>
+
+<h2 id="screen">Use Screen</h2>
+<p>
+  Do all of your development with one terminal.
+  Use screen to create virtual terminals and switch betwen them using the keyboard command.
+  There is a huge advantage to keeping your hands on the keyboard all the time.
+  </p>
+
+<ul>
+  <li>Run screen with <code>screen -R</code></li>
+  <li>Disconnect the screen session and return to the shell: <code>^a d</code>
+      (it means hold down CTRL and press A, then press D)<br>
+      Your programs will remain in the background, waiting for you to run
+      <code>screen -R again</code>.</li>
+  <li>If you close PuTTY or get disconnected you can just log in again and reconnect.</li>
+  <li>Create a screen: <code>^a c</code><br>
+      Each screen gets a number, starting at 0, up to 9.</li>
+  <li>Switch to screen 2: <code>^a 2</code></li>
+  <li>Switch back to previous screen: <code>^a ^a</code>
+  <li>Close a screen: <code>^a k</code> or exit the shell running in it</li>
+  <li>Renumber current screen to be 9: <code>^a : number &lt;space&gt; 9 &lt;enter&gt;</code></li>
+  <li>Always use the same screen numbers for each program that you use.  For example:
+      <ul>
+        <li>Screen 0: intial screen, use for emacs (or vim)</li>
+	<li>Screen 1: shell for running your program</li>
+	<li>Screen 2: shell for looking up man pages</li>
+	<li>Screen 9: irssi IRC client for consulting the gurus on Freenode</li>
+	</ul>
+      </li>
+  <li>Add an extra window: <code>^a S</code> (that is a capital S)</li>
+  <li>Switch focus to next window: <code>^a &lt;tab&gt;</code></li>
+  <li>Remove the focused window: <code>^a X</code>
+  <li>Zoom the focused window: <code>^a Q</code>
+  <li>Accidentally pressing <code>^a s</code> (lower case S) sends xoff to the current window.
+      This tells the program to stop updating the screen.  You can fix this by
+      sending xon: <code>^a q</code> (lower case q)
+  <li>Help: <code>^a ?</code></li>
+  <li>Enter the long form of a screen command after typing <code>^a :</code><br>
+      You can also put these commands in your <code>~/.screenrc</code> file so they run
+      each time you start screen.  A useful command is <code>escape ^\</code> which
+      changes the command prefix from <code>^a</code> to <code>^\</code>.
+      There are many commands.  Read about them in the man page: <code>man screen</code>
+      </li>
+  </ul>
+
+<h2 id="emacs">Use Emacs</h2>
+<p>
+  Read 
+  <a href="http://opal.cabochon.com/~stevey/blog-rants/effective-emacs.html"
+   >Effective Emacs</a> (<a href="effemacs.shtml">local copy</a>).
+  </p>
+
+<p>
+  Customize your ~/.emacs file.  I have incorporated most of the suggestions in Effective Emacs into <a href="dotemacs.txt">my .emacs file</a>.
+  </p>
+
+<ul>
+  <li>Cancel any command with Esc Esc Esc</li>
+  <li>Quit with ^x ^c</li>
+  <li>
+    Clipboard
+    <ul>
+      <li>Mark (start of selection)</li>
+      <li>Kill (cut)</li>
+      <li>Kill line</li>
+      <li>Yank (paste)</li>
+      </ul>
+    </li>
+  <li>
+    Panes
+    <ul>
+      <li>Switch Panes ^x o</li>
+      <li>One Pane ^x 1</li>
+      <li>Two Panes ^x 2</li>
+      <li>&hellip;</li>
+      </ul>
+    </li>
+  <li>
+    Buffers
+    <ul>
+      <li>Switch to buffer by name ^x b</li>
+      <li>Show list of buffers ^x ^b</li>
+      <li>Kill buffer ^x k</li>
+      <li>Open or create a file ^x ^f (use tab completion on filename!)</li>
+      <li>Save current buffer ^x ^s</li>
+      <li>Save all buffers ^x s (prompts for each one, ! saves all)</li>
+      </ul>
+    </li>
+  <li>
+    Command prompt Alt-x (supports tab-completion of command names!)
+    <ul>
+      <li>help</li>
+      <li>global-font-lock-mode (turns on syntax high lighting)</li>
+      <li>put commands in ~/.emacs, with parameters, surrounded by parentheses: (global-font-lock-mode t)</li>
+      </ul>
+    </li>
+  <li>
+    Searching
+    <ul>
+      <li>Incremental search ^s</li>
+      <li>Replace Esc %</li>
+      </ul>
+    </li>
+  </ul>
+
+<h2 id="makefile">Write a Good Makefile</h2>
+<p>
+  Use the makefile to build, clean, and test.  For interactive programs, add command line options that bypass the interactive prompts, so you can test your program without interacting with it.
+  Make many tests: test1, test2, test, etc.
+  Make tests that should succeed and others that should cause your program to report errors.
+  Make clean should remove core, *.o, all temporary files created by tests, and the program's executable.
+</p>
+
+<h2 id="manpages">Learn to Read Manpages</h2>
+<p>
+  They can be tough for an inexperienced person to understand.  Read the entire manpage of every library function call that is used by your program.  Also take a look at man pages listed in the <em>SEE ALSO</em> section.
+  The manpage <em>open(2)</em> is for the <em>open</em> in section 2 of the manual.  Read it with <em>man 2 open</em>.
+  If your unix system views manpages with <em>more</em> then change it to <em>less</em>.
+  </p>
+
+<h2 id="organize">Keep Source Code Organized</h2>
+<p>
+  Be organized.  Don't mix source code and other files.
+  Put test data files in a test/ subdirectory.  What is suitable for the source code directory: c, cpp, h, makefile, readme, INSTALL, COPYING, any data files required by your program.
+  </p>
+
+<h2 id="tar">Use tar</h2>
+<p>tar czvf project.f.tar.gz project/</p>
+<p>tar xzvf project.f.tar.gz</p>
+<p>Keep backups of your source code directory: a, b, c, &hellip;, z.</p>
+<p>Use pscp to copy the backups to your workstation</p>
+
+<h2 id="errors">Prevent Programming Errors</h2>
+<ul>
+  <li>Use assert</li>
+  <li>Fix bugs immediately</li>
+  <li>Test after every bug fix and edit</li>
+  <li>
+    Write proper function headers before writing the function. Example:
+<pre>
+/* concat - joins the proclists together into a new list
+   @param head the head of the new list, or NULL if empty
+   @param tail the tail of the new list, or NULL if empty
+   @return the new list, or NULL if empty
+*/
+</pre>
+    </li>
+  <li>
+    Avoid deep indentation by using functions.
+    Make all code have a maximum of 3 levels of indentation.  Example:
+<pre>
+int foo (int x)
+{
+  if (100>x)
+    {
+      if (0==x)
+        {
+	  /* let's indent only this far and use functions */
+	  return bar(x);
+	}
+    }
+  else return x;
+}
+</pre>
+    </li>
+  <li>Put constant first in comparisons: 0==x, 100>=x, -5>x</li>
+  <li>Learn to use <em>const</em></li>
+  <li>Learn about variable scope and lifetime</li>
+  <li>Learn about pointers</li>
+  <li>Learn C-strings really really well</li>
+  </ul>
+
+<h2 id="todo">TODO</h2>
+<p>Things to add to this tutorial:</p>
+<ul>
+    <li>Run your development system in a virtual machine such as VirtualPC, Xen, etc.</li>
+    <li>Use subversion, cvs, or darcs to keep your source and config under revision control.</li>
+    <li>Back up your repository with rsync</li>
+    <li>Use ssh keys and Pageant to avoid typing your password</li>
+    <li>Make sections for C, C++, Java, Erlang, Python</li>
+    <li>Include example Makfile</li>
+    <li>Write about removing distractions</li>
+    <li>Write about taking breaks to let your subconscious mind solve problems</li>
+    <li>Write about reduced productivity late at night (like now)</li>
+    </ul>
+
+<p><a href="/">Home</a></p>
+<hr>
+<p>Copyright &copy; 1999-2012 Michael Leonhard</p>
+</div>
+</body>
+</html>

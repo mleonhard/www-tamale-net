@@ -1,0 +1,81 @@
+(custom-set-variables
+  ;; custom-set-variables was added by Custom -- don't edit or cut/paste it!
+  ;; Your init file should contain only one such instance.
+ '(case-fold-search t)
+ '(current-language-environment "Latin-1")
+ '(default-input-method "latin-1-prefix")
+ '(global-font-lock-mode t nil (font-lock))
+ '(show-paren-mode t nil (paren))
+ '(transient-mark-mode t)
+ '(delete-selection-mode t)
+ '(desktop-save-mode t))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom -- don't edit or cut/paste it!
+  ;; Your init file should contain only one such instance.
+ )
+
+(set-background-color "black")
+(set-foreground-color "grey")
+(set-cursor-color "grey")
+
+; Effective Emacs
+; Item 1: Swap Caps-Lock and Control
+
+; Item 2: Invoke M-x without the Alt key
+(global-set-key "\C-x\C-m" 'execute-extended-command)
+(global-set-key "\C-c\C-m" 'execute-extended-command)
+
+; Item 3: Prefer backward-kill-word over Backspace
+(global-set-key "\C-w"     'backward-kill-word)
+(global-set-key "\C-x\C-k" 'kill-region)
+(global-set-key "\C-c\C-k" 'kill-region)
+
+; Item 4: Use incremental search for Navigation (C-r and C-s, C-g)
+
+; Item 5: Use Temp Buffers (C-x b foo, save is C-x C-w)
+
+; Item 6: Master the buffer and window commands (C-x 1/2/3/+/o, C-x b flag:d kill:x M-x describe-bindings)
+
+; Item 7: Lose the UI
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+
+; Item 8: Learn the most important help functions:
+; M-x describe-key <type keystrokes>
+; M-x apropos-command <regex>
+; M-x info
+
+; Item 9: Master Emacs's regular expressions
+; isearch-forward-regexp ESC C-s
+; isearch-backward-regedp ESC C-r
+(defalias 'qrr 'query-replace-regexp) ; newline is C-q C-j
+; M-x list-matching-lines
+; M-x apropos
+
+; Item 10: Master the fine-grained text manipulation commands
+; Macros start:C-x (  stop:C-x )  call-last-kbd-macro: C-x e or F4
+(global-set-key [f4] 'call-last-kbd-macro)
+; transpose-*, transpose-word M-t
+
+(global-set-key "\M-p" 'fill-paragraph)
+(global-set-key [f3] 'undo)
+(global-set-key [f6] 'erlang-next-error)
+(global-set-key [f5] 'compile)
+(global-set-key [f7] 'erlang-compile)
+(global-font-lock-mode t)
+(transient-mark-mode t)
+
+; Erlang Mode
+;(setq load-path (cons "c:/erlang/lib/tools-2.4.7/emacs" load-path))
+;(setq erlang-root-dir "c:/erlang/")
+;(setq exec-path (cons "c:/erlang/bin" exec-path))
+;(require 'erlang-start)
+
+; Python Mode
+;(setq load-path (cons "c:/Python24/python-mode-1.0" load-path))
+;(setq auto-mode-alist (cons '("\\.py$" . python-mode) auto-mode-alist))
+;(setq interpreter-mode-alist (cons '("python" . python-mode)
+;                                   interpreter-mode-alist))
+;(autoload 'python-mode "python-mode" "Python editing mode." t)
+

@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Chat Server in Erlang - tamale.net</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+<div class=page>
+
+<h1>Chat Server in Erlang (13 May 2005)</h1>
+<p><a href="/">Home</a></p>
+<p>
+  This is my first project in 
+  <a href="http://www.erlang.org/">Erlang</a>.  I'm enjoying learning the 
+  language very much.  It is well suited to programs that have many 
+  concurrent processes, like servers.  Erlang was created by 
+  <a href="http://www.ericsson.se/">Ericsson</a>.  They did an excellent job 
+  in designing the language and platform.
+  </p>
+
+<p>This chat server is divided into nine modules:</p>
+
+<ul>
+ <li>
+   <b>chat</b> contains code to start and stop the application
+   </li>
+ <li>
+   <b>chat_acceptor</b> accepts incoming tcp connections and creates 
+   liason processes to handle them
+   </li>
+ <li>
+   <b>chat_acceptor_sup</b> supervises the acceptor
+   </li>
+ <li>
+   <b>chat_dispatcher</b> keeps a list of active liasons and dispatches 
+   messages to them
+   </li>
+ <li>
+   <b>chat_liason</b> communicates with a client and sends messages to 
+   the dispatcher
+   </li>
+ <li>
+   <b>chat_liason_sup</b> supervises all of the liasons
+   </li>
+ <li>
+   <b>chat_logger</b> keeps a log file of chat server events and system 
+   errors
+   </li>
+ <li>
+   <b>chat_report_handler</b> plugs into the Erlang system logger and 
+   forwards error reports to chat_logger
+   </li>
+ <li>
+   <b>chat_supervisor</b> is the root of the application 
+   supervision tree.  It supervises the logger, liason supervisor, 
+   dispatcher, and acceptor supervisor
+   </li>
+ </ul>
+
+<p>
+  The chat server is an Erlang OTP application.  It is started with the 
+  command application:start(chat).  Various server parameters are defined 
+  in the application definition file, ebin/chat.app.  The logfile is created 
+  in the priv directory.
+  </p>
+
+<p>
+  The protocol consists of lines of text terminated by CRLF.  
+  Here is the transcript of a telnet session:
+  </p>
+
+<table align="center" width="80%" border="0" cellpadding="10" cellspacing="0">
+ <tr>
+  <td bgcolor="#e8e0e0">
+<pre>
+Welcome to Unnamed Chat Server
+1118308610 localhost:1273 connected.
+Hello!
+1118308613 &lt;localhost:1273> Hello!
+Goodbye...
+1118308619 &lt;localhost:1273> Goodbye...
+</pre>
+   </td>
+  </tr>
+ </table>
+
+<h2>Downloads</h2>
+
+<p>
+  The files are provided for educational purposes only.
+  </p>
+
+<ul>
+  <li>
+    <a href="erlchat/chat-0.1.tar.gz">chat-0.1.tar.gz</a> (11KB)
+    </li>
+  <li>
+    <a href="erlchat/chat-0.1/">chat-0.1/</a> (browse the files online)
+    </li>
+  </ul>
+
+<p><a href="/">Home</a></p>
+<hr>
+<p>Copyright &copy; 1999-2012 Michael Leonhard</p>
+</div>
+</body>
+</html>

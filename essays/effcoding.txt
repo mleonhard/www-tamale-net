@@ -1,0 +1,5 @@
+13:54 <+phenny> Mike_L: 11:50Z <kpreid> tell Mike_L about <kbd>^a ?</kbd>, which is the Right
+                Markup, but I'm not sure that it's required to be monospace. I'd use it together
+                with <style type="text/css">kbd { font-familiy: monospace; }</style>
+13:54 <+phenny> Mike_L: 11:51Z <kpreid> tell Mike_L the way to say "this should be monospace" in
+                HTML is <tt>...</tt>, but you should use more specific tags when possible.

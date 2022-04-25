@@ -1,0 +1,22 @@
+<!--#set var="title" value="Essays" -->
+<!--#set var="root" value="../" -->
+<!--#set var="page" value="essays" -->
+<!--#set var="dir" value="essays" -->
+<!--#include virtual="../header.shtml" -->
+
+<h1>Michael Leonhard&rsquo;s Essays</h1>
+
+<p>Here is the first of many essays.</p>
+
+<ul>
+  <li>
+    <a href="alarmclock.shtml">Ideal Alarm Clock</a>
+    (2006-03-09)
+    </li>
+  <li>
+    <a href="effcoding.shtml">Effective Coding on Unix</a>
+    (2006-02-21)
+    </li>
+  </ul>
+
+<!--#include virtual="/footer.shtml" -->

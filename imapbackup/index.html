@@ -1,0 +1,223 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>IMAP Backup Tool - tamale.net</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+<div class=page>
+
+<h1>IMAP Backup Tool</h1>
+<p><a href="/">Home</a></p>
+
+<p>This program incrementally backs up IMAP folders to local mbox
+files.  New messages are appended to the folder's mbox file.  It is a
+Python program, originally by <a
+href="http://the.taoofmac.com/space/Projects/imapbackup">Rui
+Carmo</a>.  I have updated it extensively.
+</p>
+
+<h3>Features</h3>
+<ul>
+<li>Downloads all IMAP folders</li>
+<li>Stores messages in mbox, mbox.gz, or mbox.bz2</li>
+<li>Each folder downloads to its own mbox file, eg. Inbox.Drafts.mbox</li>
+<li>Downloads only new messages, appends them to the mbox file</li>
+<li>IMAP4 SSL, supporting client and server certificates</li>
+<li>Accesses IMAP account in read-only mode.  Does not affect message 'seen' status.</li>
+</ul>
+
+<h3>Bugs</h3>
+
+<p>Imapbackup-1.4b and previous versions use the Python imap module.
+This module triggers a bug in socket.read() and sslobj.read().
+Imapbackup.py works around the bug in socket.read() by replacing the
+function with a patched version.  The patch is very simple.
+Unfortunately, the Python ssl module is implemented in C and is
+therefore more difficult to patch at run-time.  Here is the error that
+sometimes occurs:
+
+<pre>File INBOX.mbox: 682 messages
+Downloading 85 new messages to INBOX.mbox /Traceback (most recent call last):
+  File "imapbackup.py", line 650, in &lt;module&gt;
+    main()
+  File "imapbackup.py", line 566, in main
+    download_messages(server, filename, new_messages, config)
+  File "imapbackup.py", line 143, in download_messages
+    typ, data = server.fetch(messages[msg_id], "RFC822")
+  File "c:\Python25\lib\imaplib.py", line 437, in fetch
+    typ, dat = self._simple_command(name, message_set, message_parts)
+  File "c:\Python25\lib\imaplib.py", line 1055, in _simple_command
+    return self._command_complete(name, self._command(name, *args))
+  File "c:\Python25\lib\imaplib.py", line 885, in _command_complete
+    typ, data = self._get_tagged_response(tag)
+  File "c:\Python25\lib\imaplib.py", line 986, in _get_tagged_response
+    self._get_response()
+  File "c:\Python25\lib\imaplib.py", line 948, in _get_response
+    data = self.read(size)
+  File "c:\Python25\lib\imaplib.py", line 1150, in read
+    data = self.sslobj.read(size-read)
+MemoryError
+</pre>
+
+<p>I will make a patch to the ssl C code and submit it to the Python
+developers.  I will also submit a patch to socket.py.  I'll also look
+into using a different library for SSL.  Please email me if you find
+any other bugs.</p>
+
+<h2>Download</h2>
+<ul>
+<li><a href="imapbackup.py">imapbackup.py</a> v1.4a</li>
+<li>MD5: fea335bb595f0dc9282656c7be415e27
+</li>
+<li>SHA-1: c1a00acd04b7e7a118fb33d357b36708ab821848
+</li>
+</ul>
+
+<h2>Change Log</h2>
+
+<h3>2007-05-28 Version 1.4a:</h3>
+<ul>
+
+<li>SSL support!  Can use a private key file and server certificate
+chain file.  Unfortunately, Python's ssl module doesn't check the
+certificate chain.  This needs to be fixed.<li>
+
+<li>You can now specify the port number as part of the server name. Example:<br>
+<code>imapbackup.py -u user -s mail.com:1234</code></li>
+
+<li>Cleaned up code.  Used <a
+href="http://www.logilab.org/857">pylint</a> to find code that didn't
+comply with best practices.</li>
+<li>Download <a href="imapbackup-1.4a.py">imapbackup-1.4a.py</a></li>
+</ul>
+
+<h3>2007-05-27 Version 1.3b:</h3>
+<ul>
+<li>Fixed bug in error message printout.</li>
+<li>Download <a href="imapbackup-1.3b.py">imapbackup-1.3b.py</a></li>
+</ul>
+
+<h3>2007-05-26 Version 1.3a:</h3>
+<ul>
+<li>Better support for result of LIST command.  Fixes the problem of
+some folders not getting backed up from Courier IMAPd</li>
+<li>Improved usage printout, made parameters more consistent.</li>
+<li>Added support for <code>socket._fileobject.recv</code> bugfix on
+Windows</li>
+<li>Download <a href="imapbackup-1.3a.py">imapbackup-1.3a.py</a></li>
+</ul>
+
+<h3>2007-03-27 Version 1.2e by Rui Carmo</h3>
+<ul>
+<li>See <a href="http://the.taoofmac.com/space/Projects/imapbackup">http://the.taoofmac.com/space/Projects/imapbackup</a></li>
+<li>Download <a href="imapbackup-1.2e.py">imapbackup-1.2e.py</a></li>
+</ul>
+
+<h2>Compatibility</h2>
+
+<p>I've tested it on Python 2.4.4 and Python 2.5.1 on Windows,
+downloading from a Courier IMAP server 4.1.1 on Linux.</p>
+
+<h2>Usage</h2>
+<pre>Usage: imapbackup [OPTIONS] -s HOST -u USERNAME [-p PASSWORD]
+ -a --append-to-mboxes     Append new messages to mbox files. (default)
+ -y --yes-overwrite-mboxes Overwite existing mbox files instead of appending.
+ -n --compress=none        Use one plain mbox file for each folder. (default)
+ -z --compress=gzip        Use mbox.gz files.  Appending may be very slow.
+ -b --compress=bzip2       Use mbox.bz2 files. Appending not supported: use -y.
+ -e --ssl                  Use SSL.  Port defaults to 993.
+ -k KEY --key=KEY          PEM private key file for SSL.  Specify cert, too.
+ -c CERT --cert=CERT       PEM certificate chain for SSL.  Specify key, too.
+                           Python's SSL module doesn't check the cert chain.
+ -s HOST --server=HOST     Address of server, port optional, eg. mail.com:143
+ -u USER --user=USER       Username to log into server
+ -p PASS --pass=PASS       Prompts for password if not specified.
+
+NOTE: mbox files are created in the current working directory.</pre>
+
+<h2>Example</h2>
+
+<pre>C:\imapbackup>imapbackup.py -u mleonhard -s fyodor.hcoop.net -e
+Password:
+Connecting to 'fyodor.hcoop.net' TCP port 993, SSL
+Logging in as 'mleonhard'
+Finding Folders: 60 folders
+Folder shared: SELECT failed: ['Mailbox does not exist, or must be subscribed to
+.']
+Folder shared.SpamAssassin: SELECT failed: ['Mailbox does not exist, or must be
+subscribed to.']
+Folder INBOX: 449 messages
+File INBOX.mbox -
+WARNING: Message #138 in INBOX.mbox has a malformed Message-Id header.
+File INBOX.mbox |
+WARNING: Message #172 in INBOX.mbox has a malformed Message-Id header.
+File INBOX.mbox -
+WARNING: Message #310 in INBOX.mbox has a malformed Message-Id header.
+File INBOX.mbox |
+WARNING: Message #456 in INBOX.mbox has a malformed Message-Id header.
+File INBOX.mbox: 448 messages
+Downloading 9 new messages to INBOX.mbox: 50.38 KB total, 9.77 KB for largest me
+ssage
+Folder INBOX.Sent: 356 messages
+File INBOX.Sent.mbox: 356 messages
+New messages: 0
+Folder INBOX.Trash: 7 messages
+File INBOX.Trash.mbox: 16 messages
+New messages: 0
+Folder INBOX.Drafts: 11 messages
+File INBOX.Drafts.mbox: 12 messages
+New messages: 0
+Disconnecting
+C:\imapbackup>_
+</pre>
+
+<h2>License</h2>
+
+<p>Rui Carmo released v1.2e under the <a href="http://www.opensource.org/licenses/bsd-license.php">BSD license</a>.  I release this
+udpated version under the same license.</p>
+
+<p>Copyright &copy; 2007, Rui Carmo, Michael Leonhard</p>
+
+<p>All rights reserved.</p>
+
+<p>Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:</p>
+
+<ul>
+
+<li>Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.</li>
+
+<li>Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the
+distribution.</li>
+
+<li>Neither the name of the &lt;ORGANIZATION&gt; nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.</li>
+
+</ul>
+
+<pre>
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</pre>
+
+<p><a href="/">Home</a></p>
+<hr>
+<p>Copyright &copy; 1999-2012 Michael Leonhard</p>
+</div>
+</body>
+</html>

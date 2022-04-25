@@ -1,0 +1,494 @@
+// MythSim 3.1.1 memory file generated from proj5.asm by
+// Myth Assembler version 0 by Michael Leonhard (www.tamale.net)
+
+%
+
+// DIVT DIVTABLE ; r4 <- 114 (Division Table)
+0: 01110010   // const8=114
+1: 001111 00  // opcode=15 ri=0
+
+// DATA 0 0 (Data)
+2: 00000000   // const8=0
+3: 00000000   // const8=0
+
+// DATA 0 0 (Data)
+4: 00000000   // const8=0
+5: 00000000   // const8=0
+
+// LI r3 VAR ; r3 <- 2 (Load Immediate)
+6: 00000010   // const8=2
+7: 000001 11  // opcode=1 ri=3
+
+// LI r0 DATA ; r0 <- 80 (Load Immediate)
+8: 01010000   // const8=80
+9: 000001 00  // opcode=1 ri=0
+
+// SWM r0 r3 0 ; r0 -> Mem[r3 + 0] (Store To Memory)
+10: 11 00 0000 // rj=3 rk=0 const4=0
+11: 001000 00  // opcode=8 ri=0
+
+// LI r0 0 ; r0 <- 0 (Load Immediate)
+12: 00000000   // const8=0
+13: 000001 00  // opcode=1 ri=0
+
+// SWM r0 r3 1 ; r0 -> Mem[r3 + 1] (Store To Memory)
+14: 11 00 0001 // rj=3 rk=0 const4=1
+15: 001000 00  // opcode=8 ri=0
+
+// LI r0 64 ; r0 <- 64 (Load Immediate)
+16: 01000000   // const8=64
+17: 000001 00  // opcode=1 ri=0
+
+// SWM r0 r3 2 ; r0 -> Mem[r3 + 2] (Store To Memory)
+18: 11 00 0010 // rj=3 rk=0 const4=2
+19: 001000 00  // opcode=8 ri=0
+
+// LDM r0 r3 0 ; r0 <- Mem[r3 + 0] (Load From Memory)
+20: 11 00 0000 // rj=3 rk=0 const4=0
+21: 000111 00  // opcode=7 ri=0
+
+// LDM r2 r0 0 ; r2 <- Mem[r0 + 0] (Load From Memory)
+22: 00 00 0000 // rj=0 rk=0 const4=0
+23: 000111 10  // opcode=7 ri=2
+
+// LI r1 8 ; r1 <- 8 (Load Immediate)
+24: 00001000   // const8=8
+25: 000001 01  // opcode=1 ri=1
+
+// LDM r0 r3 2 ; r0 <- Mem[r3 + 2] (Load From Memory)
+26: 11 00 0010 // rj=3 rk=0 const4=2
+27: 000111 00  // opcode=7 ri=0
+
+// BNZ r1 NOBREAK ; if r1 != 0 then r7 <- r7 + 1 (Branch If Not Zero)
+28: 01 00 0001 // rj=1 rk=0 const4=1
+29: 010101 00  // opcode=21 ri=0
+
+// JI BREAK ; r7 < r7 + 20 (Jump Immediate)
+30: 00010100   // const8=20
+31: 000101 00  // opcode=5 ri=0
+
+// SUBI r1 r1 1 ; r1 <- r1 - 1 (Subtract Immediate)
+32: 01 00 0001 // rj=1 rk=0 const4=1
+33: 010010 01  // opcode=18 ri=1
+
+// AND r0 r0 r2 ; r0 <- r0 & r2 (Bitwise AND)
+34: 00 10 0000 // rj=0 rk=2 const4=0
+35: 010100 00  // opcode=20 ri=0
+
+// BZ r0 SKIPC ; if r0 == 0 then r7 <- r7 + 3 (Branch If Zero)
+36: 00 00 0011 // rj=0 rk=0 const4=3
+37: 010011 00  // opcode=19 ri=0
+
+// LDM r0 r3 1 ; r0 <- Mem[r3 + 1] (Load From Memory)
+38: 11 00 0001 // rj=3 rk=0 const4=1
+39: 000111 00  // opcode=7 ri=0
+
+// ADDI r0 r0 1 ; r0 <- r0 + 1 (Add Immediate)
+40: 00 00 0001 // rj=0 rk=0 const4=1
+41: 001011 00  // opcode=11 ri=0
+
+// SWM r0 r3 1 ; r0 -> Mem[r3 + 1] (Store To Memory)
+42: 11 00 0001 // rj=3 rk=0 const4=1
+43: 001000 00  // opcode=8 ri=0
+
+// LDM r0 r3 2 ; r0 <- Mem[r3 + 2] (Load From Memory)
+44: 11 00 0010 // rj=3 rk=0 const4=2
+45: 000111 00  // opcode=7 ri=0
+
+// DIVI r0 r0 2 ; r0 <- r0 / 2 (Divide Immediate)
+46: 00 00 0010 // rj=0 rk=0 const4=2
+47: 001110 00  // opcode=14 ri=0
+
+// SWM r0 r3 2 ; r0 -> Mem[r3 + 2] (Store To Memory)
+48: 11 00 0010 // rj=3 rk=0 const4=2
+49: 001000 00  // opcode=8 ri=0
+
+// JI FOR ; r7 < r7 + -26 (Jump Immediate)
+50: 11100110   // const8=-26
+51: 000101 00  // opcode=5 ri=0
+
+// ADD r2 r2 r2 ; r2 <- r2 + r2 (Add)
+52: 10 10 0000 // rj=2 rk=2 const4=0
+53: 000011 10  // opcode=3 ri=2
+
+// LDM r0 r3 1 ; r0 <- Mem[r3 + 1] (Load From Memory)
+54: 11 00 0001 // rj=3 rk=0 const4=1
+55: 000111 00  // opcode=7 ri=0
+
+// LI r1 1 ; r1 <- 1 (Load Immediate)
+56: 00000001   // const8=1
+57: 000001 01  // opcode=1 ri=1
+
+// AND r1 r0 r1 ; r1 <- r0 & r1 (Bitwise AND)
+58: 00 01 0000 // rj=0 rk=1 const4=0
+59: 010100 01  // opcode=20 ri=1
+
+// BNZ r1 SKIPM ; if r1 != 0 then r7 <- r7 + 1 (Branch If Not Zero)
+60: 01 00 0001 // rj=1 rk=0 const4=1
+61: 010101 00  // opcode=21 ri=0
+
+// ADDI r2 r2 1 ; r2 <- r2 + 1 (Add Immediate)
+62: 10 00 0001 // rj=2 rk=0 const4=1
+63: 001011 10  // opcode=11 ri=2
+
+// LDM r0 r3 0 ; r0 <- Mem[r3 + 0] (Load From Memory)
+64: 11 00 0000 // rj=3 rk=0 const4=0
+65: 000111 00  // opcode=7 ri=0
+
+// SWM r2 r0 0 ; r2 -> Mem[r0 + 0] (Store To Memory)
+66: 00 10 0000 // rj=0 rk=2 const4=0
+67: 001000 00  // opcode=8 ri=0
+
+// ADDI r0 r0 1 ; r0 <- r0 + 1 (Add Immediate)
+68: 00 00 0001 // rj=0 rk=0 const4=1
+69: 001011 00  // opcode=11 ri=0
+
+// SWM r0 r3 0 ; r0 -> Mem[r3 + 0] (Store To Memory)
+70: 11 00 0000 // rj=3 rk=0 const4=0
+71: 001000 00  // opcode=8 ri=0
+
+// SUBI r0 r2 1 ; r0 <- r2 - 1 (Subtract Immediate)
+72: 10 00 0001 // rj=2 rk=0 const4=1
+73: 010010 00  // opcode=18 ri=0
+
+// BZ r0 END ; if r0 == 0 then r7 <- r7 + 1 (Branch If Zero)
+74: 00 00 0001 // rj=0 rk=0 const4=1
+75: 010011 00  // opcode=19 ri=0
+
+// JI MAINLOOP ; r7 < r7 + -66 (Jump Immediate)
+76: 10111110   // const8=-66
+77: 000101 00  // opcode=5 ri=0
+
+// HALT (Halt)
+78: 00000000   // const8=0
+79: 000110 00  // opcode=6 ri=0
+
+// DATA 1 2 (Data)
+80: 00000001   // const8=1
+81: 00000010   // const8=2
+
+// DATA 3 4 (Data)
+82: 00000011   // const8=3
+83: 00000100   // const8=4
+
+// DATA 5 6 (Data)
+84: 00000101   // const8=5
+85: 00000110   // const8=6
+
+// DATA 7 8 (Data)
+86: 00000111   // const8=7
+87: 00001000   // const8=8
+
+// DATA 9 10 (Data)
+88: 00001001   // const8=9
+89: 00001010   // const8=10
+
+// DATA 11 12 (Data)
+90: 00001011   // const8=11
+91: 00001100   // const8=12
+
+// DATA 13 14 (Data)
+92: 00001101   // const8=13
+93: 00001110   // const8=14
+
+// DATA 15 16 (Data)
+94: 00001111   // const8=15
+95: 00010000   // const8=16
+
+// DATA 17 18 (Data)
+96: 00010001   // const8=17
+97: 00010010   // const8=18
+
+// DATA 19 20 (Data)
+98: 00010011   // const8=19
+99: 00010100   // const8=20
+
+// DATA 21 22 (Data)
+100: 00010101   // const8=21
+101: 00010110   // const8=22
+
+// DATA 23 24 (Data)
+102: 00010111   // const8=23
+103: 00011000   // const8=24
+
+// DATA 25 26 (Data)
+104: 00011001   // const8=25
+105: 00011010   // const8=26
+
+// DATA 27 28 (Data)
+106: 00011011   // const8=27
+107: 00011100   // const8=28
+
+// DATA 29 30 (Data)
+108: 00011101   // const8=29
+109: 00011110   // const8=30
+
+// DATA 31 32 (Data)
+110: 00011111   // const8=31
+111: 00100000   // const8=32
+
+// DATA 0 0 (Data)
+112: 00000000   // const8=0
+113: 00000000   // const8=0
+
+// DATA 0 0 (Data)
+114: 00000000   // const8=0
+115: 00000000   // const8=0
+
+// DATA 0 0 (Data)
+116: 00000000   // const8=0
+117: 00000000   // const8=0
+
+// DATA 1 0 (Data)
+118: 00000001   // const8=1
+119: 00000000   // const8=0
+
+// DATA 1 0 (Data)
+120: 00000001   // const8=1
+121: 00000000   // const8=0
+
+// DATA 2 1 (Data)
+122: 00000010   // const8=2
+123: 00000001   // const8=1
+
+// DATA 2 1 (Data)
+124: 00000010   // const8=2
+125: 00000001   // const8=1
+
+// DATA 3 1 (Data)
+126: 00000011   // const8=3
+127: 00000001   // const8=1
+
+// DATA 3 1 (Data)
+128: 00000011   // const8=3
+129: 00000001   // const8=1
+
+// DATA 4 2 (Data)
+130: 00000100   // const8=4
+131: 00000010   // const8=2
+
+// DATA 4 2 (Data)
+132: 00000100   // const8=4
+133: 00000010   // const8=2
+
+// DATA 5 2 (Data)
+134: 00000101   // const8=5
+135: 00000010   // const8=2
+
+// DATA 5 2 (Data)
+136: 00000101   // const8=5
+137: 00000010   // const8=2
+
+// DATA 6 3 (Data)
+138: 00000110   // const8=6
+139: 00000011   // const8=3
+
+// DATA 6 3 (Data)
+140: 00000110   // const8=6
+141: 00000011   // const8=3
+
+// DATA 7 3 (Data)
+142: 00000111   // const8=7
+143: 00000011   // const8=3
+
+// DATA 7 3 (Data)
+144: 00000111   // const8=7
+145: 00000011   // const8=3
+
+// DATA 8 4 (Data)
+146: 00001000   // const8=8
+147: 00000100   // const8=4
+
+// DATA 8 4 (Data)
+148: 00001000   // const8=8
+149: 00000100   // const8=4
+
+// DATA 9 4 (Data)
+150: 00001001   // const8=9
+151: 00000100   // const8=4
+
+// DATA 9 4 (Data)
+152: 00001001   // const8=9
+153: 00000100   // const8=4
+
+// DATA 10 5 (Data)
+154: 00001010   // const8=10
+155: 00000101   // const8=5
+
+// DATA 10 5 (Data)
+156: 00001010   // const8=10
+157: 00000101   // const8=5
+
+// DATA 11 5 (Data)
+158: 00001011   // const8=11
+159: 00000101   // const8=5
+
+// DATA 11 5 (Data)
+160: 00001011   // const8=11
+161: 00000101   // const8=5
+
+// DATA 12 6 (Data)
+162: 00001100   // const8=12
+163: 00000110   // const8=6
+
+// DATA 12 6 (Data)
+164: 00001100   // const8=12
+165: 00000110   // const8=6
+
+// DATA 13 6 (Data)
+166: 00001101   // const8=13
+167: 00000110   // const8=6
+
+// DATA 13 6 (Data)
+168: 00001101   // const8=13
+169: 00000110   // const8=6
+
+// DATA 14 7 (Data)
+170: 00001110   // const8=14
+171: 00000111   // const8=7
+
+// DATA 14 7 (Data)
+172: 00001110   // const8=14
+173: 00000111   // const8=7
+
+// DATA 15 7 (Data)
+174: 00001111   // const8=15
+175: 00000111   // const8=7
+
+// DATA 15 7 (Data)
+176: 00001111   // const8=15
+177: 00000111   // const8=7
+
+// DATA 16 8 (Data)
+178: 00010000   // const8=16
+179: 00001000   // const8=8
+
+// DATA 16 8 (Data)
+180: 00010000   // const8=16
+181: 00001000   // const8=8
+
+// DATA 17 8 (Data)
+182: 00010001   // const8=17
+183: 00001000   // const8=8
+
+// DATA 17 8 (Data)
+184: 00010001   // const8=17
+185: 00001000   // const8=8
+
+// DATA 18 9 (Data)
+186: 00010010   // const8=18
+187: 00001001   // const8=9
+
+// DATA 18 9 (Data)
+188: 00010010   // const8=18
+189: 00001001   // const8=9
+
+// DATA 19 9 (Data)
+190: 00010011   // const8=19
+191: 00001001   // const8=9
+
+// DATA 19 9 (Data)
+192: 00010011   // const8=19
+193: 00001001   // const8=9
+
+// DATA 20 10 (Data)
+194: 00010100   // const8=20
+195: 00001010   // const8=10
+
+// DATA 20 10 (Data)
+196: 00010100   // const8=20
+197: 00001010   // const8=10
+
+// DATA 21 10 (Data)
+198: 00010101   // const8=21
+199: 00001010   // const8=10
+
+// DATA 21 10 (Data)
+200: 00010101   // const8=21
+201: 00001010   // const8=10
+
+// DATA 22 11 (Data)
+202: 00010110   // const8=22
+203: 00001011   // const8=11
+
+// DATA 22 11 (Data)
+204: 00010110   // const8=22
+205: 00001011   // const8=11
+
+// DATA 23 11 (Data)
+206: 00010111   // const8=23
+207: 00001011   // const8=11
+
+// DATA 23 11 (Data)
+208: 00010111   // const8=23
+209: 00001011   // const8=11
+
+// DATA 24 12 (Data)
+210: 00011000   // const8=24
+211: 00001100   // const8=12
+
+// DATA 24 12 (Data)
+212: 00011000   // const8=24
+213: 00001100   // const8=12
+
+// DATA 25 12 (Data)
+214: 00011001   // const8=25
+215: 00001100   // const8=12
+
+// DATA 25 12 (Data)
+216: 00011001   // const8=25
+217: 00001100   // const8=12
+
+// DATA 26 13 (Data)
+218: 00011010   // const8=26
+219: 00001101   // const8=13
+
+// DATA 26 13 (Data)
+220: 00011010   // const8=26
+221: 00001101   // const8=13
+
+// DATA 27 13 (Data)
+222: 00011011   // const8=27
+223: 00001101   // const8=13
+
+// DATA 27 13 (Data)
+224: 00011011   // const8=27
+225: 00001101   // const8=13
+
+// DATA 28 14 (Data)
+226: 00011100   // const8=28
+227: 00001110   // const8=14
+
+// DATA 28 14 (Data)
+228: 00011100   // const8=28
+229: 00001110   // const8=14
+
+// DATA 29 14 (Data)
+230: 00011101   // const8=29
+231: 00001110   // const8=14
+
+// DATA 29 14 (Data)
+232: 00011101   // const8=29
+233: 00001110   // const8=14
+
+// DATA 30 15 (Data)
+234: 00011110   // const8=30
+235: 00001111   // const8=15
+
+// DATA 30 15 (Data)
+236: 00011110   // const8=30
+237: 00001111   // const8=15
+
+// DATA 31 15 (Data)
+238: 00011111   // const8=31
+239: 00001111   // const8=15
+
+// DATA 31 15 (Data)
+240: 00011111   // const8=31
+241: 00001111   // const8=15
+
+// DATA 32 16 (Data)
+242: 00100000   // const8=32
+243: 00010000   // const8=16
+
+// end of file

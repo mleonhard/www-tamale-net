@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Chat Client in Python - tamale.net</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+<div class=page>
+
+<h1>Chat Client in Python (2003-07-28)</h2>
+<p><a href="/">Home</a></p>
+<p><img src="screenshot.png"></p>
+<p>
+ <b>Client.py</b> is a simple chat client written in Python.  It requires:
+ </p>
+<ul>
+ <li>PyGame (<a href='http://www.pygame.org/'>http://www.pygame.org/</a>)</li>
+ <li>inetcomms.py</li>
+ <li>Widgets.py</li>
+ </ul>
+
+<p>
+ <b>Server.py</b> is a single threaded chat server.
+ All it does is relay incoming data to all connectsions.
+ It requires inetcomms.py.
+ </p>
+
+<p>
+ <b>inetcomms.py</b> is a module for internet clients and servers.
+ </p>
+
+<ul>
+ <li>LiasonClass provides non-blocking socket communications.</li>
+ <li>HeadHunterClass does non-blocking connects.</li>
+ <li>ListenClass handles a listening socket and accepting connections.</li>
+ </ul>
+
+<p>
+ <b>Widgets.py</b> is a GUI widget module that uses PyGame.
+ </p>
+<ul>
+ <li>WidgetWindow - GUI framework class.
+  The application must pass pygame events to it.
+  </li>
+ <li>ButtonClass - simple button</li>
+ <li>PageClass - vertically scrollable text window (with word-wrap)</li>
+ <li>EditClass - basic single line edit control (supports key repeat)</li>
+ <li>TextClass - basic single line label</li>
+ <li>MultiLineTextClass - multi-line text label (with word-wrap)</li>
+ </ul>
+
+<p><b>Widgetsdemo.py</b> shows off the capabilities of Widgets.py</p>
+
+<p>The chatsystem archive contains the latest versions of all of these files.</p>
+
+<p>
+ All of these programs are Copyright (C) 2003 Michael Leonhard<br>
+ These programs are put in the public domain.
+ Questions may be sent to me by email: client at tamale dot net
+ </p>
+
+<p>
+  Due to a request from Nathan Lanyon, these programs are also be
+  available under the
+  <a href="http://www.gnu.org/licenses/gpl.txt">GNU General
+    Public License</a>.
+  You may choose to license this software from me or just take it as 
+  public domain software.  Whichever method you choose, know that the 
+  software comes with no warranty.
+  </p>
+
+<h2>Source Code:</h2>
+
+<table>
+<thead>
+  <tr>
+    <td>Name</td>
+    <td>Date</td>
+    <td>Size</td>
+  </tr>
+</thead>
+<tbody>
+<tr><td><a href="chatsystem-1.2.tar.gz">chatsystem-1.2.tar.gz</a></td><td>2003-07-28</td><td>14 KB</td></tr>
+<tr><td><a href="client.py">client.py</a></td><td>2003-07-28</td><td>13 KB</td></tr>
+<tr><td><a href="inetcomms.py">inetcomms.py</a></td><td>2003-07-28</td><td>8 KB</td></tr>
+<tr><td><a href="server.py">server.py</a></td><td>2003-07-07</td><td>3 KB</td></tr>
+<tr><td><a href="widgets.py">widgets.py</a></td><td>2003-07-06</td><td>28 KB</td></tr>
+<tr><td><a href="widgetsdemo.py">widgetsdemo.py</a></td><td>2003-07-06</td><td>4 KB</td></tr>
+</tbody>
+</table>
+
+<p><a href="/">Home</a></p>
+
+<hr>
+<p>Copyright &copy; 1999-2012 Michael Leonhard</p>
+</div>
+</body>
+</html>

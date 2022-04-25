@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>SHA-1 C++ Library - tamale.net</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+<div class=page>
+
+<h1>SHA-1 C++ Library</h1>
+
+<p><a href="/">Home</a></p>
+
+<p>Updated 2005-6-21</p>
+
+<p>This is a C++ class that implements the Secure Hash Algorithm SHA-1.  The
+purpose of the algorithm is to calculate a strong hash of given bit string.
+By "strong", we mean that it is very difficult to find a different bit string
+that results in the same hash.  It is similarly difficult, using only the hash,
+to determine the original bit string.  SHA-1 produces a 20 byte (160 bit) hash.
+
+<h2>Download</h2>
+<ul>
+  <li>
+    <a href="sha1-0.2.tar.gz">Download sha1-0.2.tar.gz</a><br>
+    MD5: b6857252c8fa06df568fee372b579e4d<br>
+    SHA-1: b3d4a58d4c950629d50210be0c1cf3e2601ac703
+  </li>
+  <li><a href="sha1-0.2/">Browse Source</a></li>
+</ul>
+
+<h2>Class Usage</h2>
+
+<p>The class is called SHA1.  The API consists of four methods:
+
+<p><b>SHA1::SHA1()</b> is the class constructor
+
+<p>
+ <b>void SHA1::addBytes( const char* data, int num )</b>
+ processes bytes into the hash.
+ <ul>
+  <li><i>data</i> is a pointer to the first byte to be added.
+    The bytes are not modified.
+  <li><i>num</i> is the number of bytes to process.
+  </ul>
+
+<p>
+ <b>unsigned char* SHA1::getDigest()</b>
+ completes the hashing process and returns the final hash.  The SHA1 instance
+ should not be used after calling this method.
+ <ul><li>Returns a pointer to a 20-byte hash.  Release the memory with free().
+  </ul>
+
+<p>
+ <b>static void SHA1::hexPrinter( unsigned char* c, int l )</b>
+ prints bytes to stdout in hexadecimal format.
+ <ul>
+  <li><i>c</i> is a pointer to the first byte to be printed. 
+    The bytes are not modified.
+  <li><i>l</i> is the number of bytes to print.
+  </ul>
+
+<h2>Example</h2>
+
+<p>The following program will print one line to stdout:
+<pre> a9 99 3e 36 47 06 81 6a ba 3e 25 71 78 50 c2 6c 9c d0 d8 9d
+
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+#include "sha1.h"
+int main(int argc, char *argv[])
+{
+	#define BYTES "abc"
+	SHA1* sha1 = new SHA1();
+	sha1-&gt;addBytes( BYTES, strlen( BYTES ) );
+	unsigned char* digest = sha1-&gt;getDigest();
+	sha1-&gt;hexPrinter( digest, 20 );
+	delete sha1;
+	free( digest );
+}
+</pre>
+
+<h2>License</h2>
+
+<p>
+  I couldn't find a free SHA-1 implementation for C++ so I wrote my own.
+  I wrote the Python version first and then the C++ one.  The source code
+  has an open source license (the so-called 
+  <a href="http://www.opensource.org/licenses/mit-license.php">"MIT License"</a>
+  ) which allows it to be used in commercial software.
+  </p>
+
+<h2>Links</h2>
+
+<p><a href="http://www.itl.nist.gov/fipspubs/fip180-1.htm">Secure Hash
+Standard (FIP 180-1)</a> is the official document from the U.S.
+government which defines the algorithm.</p>
+
+<p><a href="http://www.wikipedia.org">Wikipedia</a> has a very helpful
+<a href="http://en.wikipedia.org/wiki/SHA">article on SHA</a>.</p>
+
+<p><a href="http://corz.org/windows/software/checksum/">Corz
+Checksum</a> is a useful Windows program for verifying file integrity.
+It uses this SHA-1 library.</p>
+
+<p><a href="/">Home</a></p>
+
+<hr>
+<p>Copyright &copy; 1999-2012 Michael Leonhard</p>
+</div>
+</body>
+</html>

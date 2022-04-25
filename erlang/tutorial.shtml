@@ -1,0 +1,413 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Erlang for C, C++, and Java Programmers - tamale.net</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+<div class=page>
+
+<p align="center">
+	This tutorial was written by Sean Hinde (a.k.a. Earlyriser) and
+	originally appeared at
+	<a href="http://web.archive.org/web/20040205013610/http://www.earlyriser.org/Erlang_tutorial.html"
+	>http://www.earlyriser.org/Erlang_tutorial.html</a>.<br>
+	I retrieved it from <a href="http://www.archive.org/">The Internet Archive</a>
+	on 2005-12-21 and updated it.<br>
+	Thanks to <a href="http://www.redrival.com/scorpius">Anthony D'Agostino</a>
+	for giving me the author's information.<br>
+	Thanks to <a href="http://jjinux.blogspot.com/">Shannon -jj Behrens</a>
+	for pointing out a typo.<br>
+	</p>
+<hr>
+
+<h1>Erlang for C, C++ and Java Programmers</h1>
+<p><a href="/">Home</a></p>
+<p>
+	This brief tutorial aims to cover the main concepts and syntax of <a href="http://www.erlang.org">Erlang</a> in a way which programmers of C type languages can relate to. It is not a complete description of the language by any means but it does try to give a feel for the main conceptual differences in Erlang.
+	</p>
+<p>
+	All comments are welcome &ndash; with feedback from readers this might even end up being useful!
+	</p>
+
+<h3>1. Erlang is a small and easy to learn language</h3>
+
+<p>
+	Erlang was designed from the beginning to be small and easy to learn &ndash; Ericsson had to train many C/C++ programmers in Erlang so it was part of the core brief to make it as easy as possible.
+	</p>
+<p>
+	There are only a small number of concepts to master and most will already be familiar to C programmers.
+	</p>
+
+<h3>2. Fundamental differences in approach</h3>
+<p>
+	The biggest difference between programming in C and Erlang is in how programs are structured and in the fact that data is immutable &ndash; that is once created, you can't change it. You can only copy it and make required changes as you copy. (If you don't need the original any more, it is up to the garbage collector to discover this and reclaim memory.)
+	</p>
+<p>
+	This makes the typical way of programming in C &mdash; using arrays, whose entries you keep changing, or records, with pointers to things that you keep changing &mdash; either wrong or potentially very inefficient.
+    </p>
+<p>
+	So what does a program like <a href="http://www.wings3d.com">Wings3D</a> do, for structures (such as the winged-edge data structure) that have constantly changing subpieces? It would be too slow to copy the entire structure every time, say, you moved a vertex. The answer: extensive use of gb_trees and gb_sets. These are binary trees for holding dictionaries and sets, with the very useful property that when you copy them (in order to modify, add, or delete entries), you only change about log(number of elements) pieces of data; the rest of the trees are unchanged and can share the old data without copying.
+	</p>
+<p>
+	So, for instance, where a C programmer might have a pointer to an edge struct inside a face struct, wings puts an integer index for the edge there, and has a separate gb_trees dictionary to map edge# -&gt; edge record.
+	</p>
+<p>
+	While this is no doubt still slower than the equivalent functionality in C or C++, there are benefits, the main ones being that you avoid a whole class of bugs, and that "Undo" becomes very easy to implement.
+	</p>
+
+<h3>3. Data Types</h3>
+<p>
+	Erlang has obvious basic data types such as floats, integers etc. There is no need to explicitly type data as Erlang variables carry the type of data round with them.
+	</p>
+
+<h3>4. Compound data types</h3>
+<p>
+	Erlang has a small selection of compound data types some of which will be familiar and some not.
+	</p>
+<p>
+	Mostly where a C program would use a large or variable sized array (or a linked list), an Erlang program uses a linked list. Many (most?) Erlang functions and programs simply iterate over data held in linked lists (or other more complex data structures like gb_trees). Fortunately Erlang has special syntax for lists and provides nice ways to move around them. A linked list might be:
+	</p>
+<pre>    [1, 1.5, &quot;Wings3D&quot;]</pre>
+<p>An empty list looks like:</p>
+<pre>    []</pre>
+<p>
+	There is another basic way to group data together and that is the tuple. This is a fixed size compound data type typically used to group small amounts of data together. For example the obvious representation of a 3D vector in Erlang is:
+	</p>
+<pre>    {1.0, 2.0, 1.5}</pre>
+<p>
+	The final way of grouping data together is the record. This is similar to a struct in C. They must be declared before use in a compiler directive (starts with - ):
+	</p>
+
+<pre>
+-record(vec, {x
+             ,y
+             ,z}).</pre>
+<p>Creating a record at runtime is done like:</p>
+<pre>
+#vec{x = 1.0
+    ,y = 2.0
+    ,z = 1.5}</pre>
+
+<h3>5. Atoms.</h3>
+<p>
+    Atoms are a feature not found in many languages but they are very useful in Erlang. An atom may be though of as a fixed label. They normally start with a lower case letter so:
+    </p>
+<pre>
+    ok
+    error
+    vec
+</pre>
+<p>are all atoms.</p>
+<p>They are used in places where in C one might define a constant:</p>
+<pre>
+    #define OK 1
+    #define ERROR 2
+
+    switch result {
+    case OK:
+         var = 1.0;
+         break;
+    case ERROR:
+         var = 0.0;
+    }
+</pre>
+
+<h3>6. Variables and Matching.</h3>
+<p>
+    Variable assignment looks pretty much the same as in other languages but there is one very useful conceptual difference. Variable names must start with a capital letter (this is not it &ndash; patience!) so the following snippet works fine:
+    </p>
+<pre>
+    ...
+    A=1,
+    B=2,
+    C=A + B,
+    io:format("~p",[C]).   %The equivalent of printf("%d",C)
+</pre>
+<p>
+    The useful difference is that variables are only assigned to once within any function, and the = operator doesn't in fact mean assign, it means &quot;match with&quot;. This idea of &quot;matching&quot; is one of the very few important new concepts to get the hang of as it crops up everywhere and gives Erlang much of its elegance.
+    </p>
+<p>
+    If a variable is fresh (or unbound) then matching it with some data has the effect of irreversably binding the variable to that value. After that attempts to change it will result in a runtime exception (useful for asserts amongst other things).
+    </p>
+<p>
+    Matching is very powerful and also covers compound data types, so you can do:
+    </p>
+<pre>
+    {X, Y, Z} = {1.0, 2.0, 1.5}.
+</pre>
+<p>
+    Here we match the tuple <code>{X,Y,Z}</code> against our vector, and assuming X,Y,and Z were fresh variables beforehand, after this statement they will each be bound to the value in the matching position. In other words we have extracted the 3 values from our Vector.
+    </p>
+<p>An equivalent example with records would be</p>
+<pre>
+    #vec{x=X, y=Y, z=Z} = #vec{x=1.0, y=2.0, z=1.5}</pre>
+
+<h3>7. Case and If</h3>
+<p>
+    Now we have grasped the concept of matching we can see how exactly the same rules apply in two further Erlang constructs. Case stements are similar in form to C switch statements but are much more generic. For example study the following code snippet:
+    </p>
+<pre>
+    ...
+    X=1.0,
+    Y=2.0,
+    Z=1.5,
+    ...
+    case {X, Y, Z} of
+        {0, 0, 0} -&gt; empty_vector;    % empty_vector is an atom
+        {A, A, A} -&gt; all_the_same;    % so is all_the_same
+        {X1, Y1, Z1} -&gt; {X1 + 1, Y1 + 1, Z1 +1}
+    end
+</pre>
+<p>
+    The case statement tries to match <code>{X,Y,Z}</code> (which in this case is the same as saying <code>{1.0,2.0,1.5}</code> as all the values are bound) against each case clause in turn. The first one which matches both form and content is selected, and the whole case statement evaluates to what comes after the -&gt; (We'll do a bit more on this later).
+    </p>
+<p>
+    So, first of all it tries to match <code>{1.0, 2.0, 1.5}</code> against the zero vector and fails. Then it tries to match it against <code>{A,A,A}</code>. This one looks a little odd &ndash; A is not yet bound so we might expect that A will match each of the values 1.0, 2.0, and 1.5. But this would break the rule that a variable can only hold one value. What happens is the variables are matched left to right &ndash; The first A is matched with 1.0 and thus bound to this value, then the second A (now bound to 1.0) is matched against 2.0, which fails and therefore this whole case clause fails.
+    </p>
+<p>
+    Finally we try to match against the fresh variables X1, Y1, and Z1 &ndash; this succeeds and the result of the case is a new vector
+    <code>{2.0, 3.0, 2.5}</code>.
+    </p>
+<p>If statements work very much the same but they are more limited.  XXXXX</p>
+
+<h3>8. Functions</h3>
+<p>
+    You might think it odd to leave functions until now but they take advantage of the matching concept in a very powerful way. Here we also see another radical departure from C like langauges: a function in Erlang may have multiple definitions, and the one to be executed is selected by exactly the same matching rules as we saw in the case statement.
+    </p>
+<p>
+    The first level of matching is based on the number of parameters, so the following are two different Erlang functions with the same name.
+    </p>
+<pre>    test(A) -&gt; 1.</pre>
+<pre>    test(A, B) -&gt; 2.</pre>
+<p>
+    the -&gt; construct should be read as "evaluates to". The final value in the function is the equivalent of the return value in C so the first one might look like:
+    </p>
+<pre>
+    test(int a) {
+        return 1
+    };
+</pre>
+<p>
+    The second level of matching is between multiple function definitions with the same number of parameters. We can re-write an exact equivalent of our case statement using a single function with multiple definitions:
+    </p>
+<pre>
+    test({0, 0, 0}) -&gt;  empty_vector;      % empty_vector is an atom
+    test({A, A, A}) -&gt; all_the_same;
+    test({X1, Y1, Z1}) -&gt; {X1 + 1, Y1 + 1, Z1 +1}.
+</pre>
+<p>
+    This would be the idiomatic way to write this in Erlang, and in fact (in R8B) is evaluated more quickly than the case statement.
+    </p>
+<p>
+    In this type of function all the definitions must appear straight after one another in the source code file and be separated by semicolons. The final one is terminated by a full stop.
+    </p>
+<p>
+    We also see here how to return multiple values from a function. There is no need to pass in pointers to a set of output variables to an Erlang function if you want to return multiple values &ndash; you just return a tuple. (In fact you can't affect the value of any variable passed into the function &ndash; Erlang functions are "side effect free" apart from one case we will touch on briefly when we talk about threads and message passing).
+    </p>
+
+<h3>9. Iteration and Recursion</h3>
+<p>
+    Now we get to the meat and gravy (or dhal and rice) of the Erlang programming model.
+    </p>
+<p>
+    There is one new feature of lists we need to understand first though. That is the | operator. In a matching context this means "split a list up into two parts: the first element, and the rest of the list", otherwise it means "insert item at start of list".  It is this which allows us to extract values from lists and make new lists.
+    </p>
+<p>So for example after a match:</p>
+<pre>    [Head|Tail] = [1,2,3].</pre>
+<p>Head would be 1 and Tail would be [2,3]</p>
+<p>Then if we did:</p>
+<pre>    L = [Head|Tail].</pre>
+<p>L would be <code>[1,2,3]</code></p>
+<p>
+    Ok, so much for that diversion. Let us say now that we have a list of vectors and we wish to add 1 to all the values. In Erlang we could use a recursive function like the following:
+    </p>
+<pre>
+    add([]) -&gt; [];
+    add([{X, Y, Z}|T]) -&gt;
+        [{X+1, Y+1, Z+1}|add(T)].
+</pre>
+<p>
+    This is the last complicated thing we really need to understand to write complex Erlang expressions, so lets look in detail at our add function by working through an example. We will call our function with:
+    </p>
+<pre>
+    add([{1,2,3}, {10,11,12}, {20,21,22}])
+</pre>
+<p>
+    The first time through add([]) doesn't match so it uses the second definition. This matches and as we enter the function X is 1, Y is 2, Z is 3, and T is the list <code>[{10,11,12}, {20,21,22}]</code>
+    </p>
+<p>
+    This evaluates to the construction of a list with <code>{2,3,4}</code> at the head and the result of <code>add(T)</code> appended afterwards &ndash; it is starting to look like the result we want &ndash; a list starting with <code>{2,3,4}</code>, followed by the result of <code>add([{10,11,12}, {20,21,22}])</code>.
+    </p>
+<p>
+    This is classic recursion &ndash; next time though we get {11,12,13} followed by the result of <code>add([{20,21,22}]</code> , next time <code>{21,22,23}</code> followed by <code>add([])</code>.
+    </p>
+<p>
+    Short aside: if you take all the entries out of a list you get left with the empty list, similarly if you make a list by appending the empty list to a list you just get the list.
+    </p>
+<p>
+    So when we call <code>add([])</code> the first defintiion is evaluated which results in <code>[]</code> and breaks the recursion. Our result is
+    </p>
+<pre>
+    [{2,3,4} | {11,12,13} | {20,21,22} | [] ]
+</pre>
+<p>
+    which by the above rules is simply <code>[{2,3,4}, {11,12,13}, {20,21,22}]</code>
+    </p>
+<p>
+    It is worth experimenting with the <code>|</code> operator at the Erlang shell to get a handle on what it does.
+    </p>
+<p>
+    There are a number of other iteration patterns or ways to write the same function. One very common version of this (which has the advantage that it executes in constant memory space) uses an accumulator parameter to build the result:
+    </p>
+<pre>
+    add(A) -&gt;
+        add(A, []).
+
+    add([], Acc) -&gt;
+        lists:reverse(Acc);
+    add([{X, Y, Z} | T], Acc) -&gt;
+        add(T, [{X+1, Y+1, Z+1} | Acc]).
+</pre>
+<p>
+    This pattern creates the list backwards so at the end we need to reverse the list.
+    </p>
+
+<h3>10. Odds and Sods</h3>
+<p>
+    It is possible to augment matching with guards. These may be used in function headers, case and if statements and are placed before the <code>-&gt;</code>. Guard expressions must return either the atom true or false and must not have side effects.
+    </p>
+<p>for example</p>
+<pre>
+    type(A) when is_integer(A) -&gt; its_an_int;
+    type(A) when is_float(A) -&gt; its_a_float;
+    type(A) when it_tuple(A) -&gt; its_a_tuple;
+    ...
+</pre>
+<p>
+    There is a full list of valid guard expressions in the Erlang documentation</p>
+<p>
+    There is also a set of comparison operators including <code>==</code> which also return the one of the atoms true or false.
+    </p>
+
+<h3>11. Global Data.</h3>
+<p>
+    You may have been wondering how a program maintains state and how it is possible to have global data in an Erlang program when Erlang functions cannot change any data outside their own execution context. The short answer is that Erlang programs cannot have global variables in the same way a C program can.
+    </p>
+<p>
+    They can however maintain state, and the structure in which state is maintained is.. wait for it.. a thread!
+    </p>
+<p>
+    An Erlang thread is modelled as a recursive function which just keeps on recursing. The clever part is that it can be made event driven so it does not use CPU capacity while it is waiting. The state is held as the parameter(s) of the function. A thread might look like:
+    </p>
+<pre>
+    thread(State) -&gt;
+        receive
+            {keypress, Key} -&gt;
+                New_state = handle_keypress(Key, State),
+                thread(New_state);
+            quit -&gt;
+                quitted
+        end.
+</pre>
+<p>
+    While keypresses are being received by the thread it carries on handling the keypresses and going back to wait at the receive statement for the next event.
+    </p>
+<p>
+    In this way the state of an erlang system is distributed around all the threads which make up the system.
+    </p>
+<p>
+    Threads communicate by sending messages which will be matched by the receive statement of the receiving thread. All threads have a Process ID or they can be registered with a name (which must be an atom). The message sending statement looks like:
+    </p>
+<pre>
+    Pid ! {keypress, enter}
+</pre>
+<p>
+    So for example the Erlang system might have some process receiving raw binary data from the operating system upon each keypress. This process would decode the raw data and send the application thread the nice message {keypress, enter}.
+    </p>
+<p>This is exactly the sort of thing the esdl application does for Wings3D.</p>
+
+<h3>12. Modules</h3>
+<p>
+    Each Source code file makes up one module. It must be named module_name.erl and have a <code>-module(module_name).</code> definition in the file. Module names have the same syntax as atoms.
+    </p>
+<p>To call a function in another module the format is:</p>
+<pre>
+    module_name:function(Par1, Par2).
+</pre>
+<p>
+    There are a huge range of modules which come with the Erlang system but one is special. The module <code>erlang</code> has a bunch of functions which are globally scoped and may be called from any module using the local form. These include the guard expressions so <code>is_integer/1</code> is the same as <code>erlang:is_integer/1</code>
+    </p>
+<p>Some useful modules are maths and gb_trees.</p>
+
+<h3>13. Funs</h3>
+<p>
+    Erlang has a feature where a generic function can be defined and assigned to a variable. It may be called any time later and when it is it 'remembers' the state of the variables at the time it was defined.
+    </p>
+<p>For example to define a function to add 1 to a number we could do:</p>
+<pre>
+    Add = fun(Num) -&gt; Num + 1 end. % Why not try it in the erlang shell
+</pre>
+<p>Then to use the function it is just:</p>
+<pre>
+    Add(10).
+</pre>
+<p>
+    An example of where we could see that a fun remembers variables would be this function which makes a fun to add any number to the parameter. e.g
+    </p>
+<pre>
+    make_add_fun(N) -&gt;
+        fun(Num) -&gt; Num + N end.  %The value of N from outside the fun is captured by the fun.
+</pre>
+<p>
+    This is another way to maintain state, and is used in Wings3D in a quite advanced way to keep track of which mode the gui is in. Wings3D hold a list of funs which it uses as a stack. When you right click on a menu the menu fun is added to the head of the list which is called to do it's stuff and afterwards removed from the top of the list revealing the previous state. This is tricky stuff..
+    </p>
+<p>
+    Funs are also useful in iterating over lists and other data types. We can re-write our vector adding function using a standard function from the lists module which does the iteration for us. So:
+    </p>
+<pre>
+    add(List_of_vectors) -&gt;
+        Add = fun({X, Y, Z}) -&gt; {X+1, Y+1, Z+1} end,
+        lists:map(Add, List_of_vectors).
+</pre>
+
+<h3>14. List Comprehensions</h3>
+<p>
+    List comprehensions are perhaps one of the most incomprehensible newer features of Erlang!
+    </p>
+<p>
+    I never use them but it is important to have a basic understanding to read other peoples code. The description in the Erlang docs is pretty good:
+    </p>
+<p>
+    <a href="http://www.erlang.org/doc/">Erlang/OTP Documentation</a> (click on Erlang Reference Manual, find List Comprehensions in Section 6.22)
+    </p>
+
+<h3>15. Summary</h3>
+<p>
+    There are a small number of powerful concepts which once understood run all through Erlang programming.
+    </p>
+<ul>
+    <li>Pattern Matching</li>
+    <li>Function Recursion</li>
+    <li>Multiple return values</li>
+    <li>Threads to hold state and receive events (messages)</li>
+    <li>Funs</li>
+    <li>Immutable data (single assignment variables)</li>
+    </ul>
+<p>
+    Programs such as Wings3d use these concepts in some very advanced ways but even so they are still just these few concepts.
+    </p>
+
+<hr>
+
+<p align="center">
+	This tutorial was written by Sean Hinde (a.k.a. Earlyriser) and
+	originally appeared at
+	<a href="http://web.archive.org/web/20040205013610/http://www.earlyriser.org/Erlang_tutorial.html"
+	>http://www.earlyriser.org/Erlang_tutorial.html</a>.
+	</p>
+
+</div>
+</body>
+</html>

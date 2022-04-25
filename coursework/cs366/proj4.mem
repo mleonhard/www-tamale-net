@@ -1,0 +1,108 @@
+proj4.mem (Project 4 Memory)
+Michael Leonhard (mleonhar)
+CS366 Fall 2005, Professor Khokhar
+TA Mani Radhakrishnan
+2005-11-15
+
+Program Pseudocode
+r2 <- address of parameters
+r0 <- Mem[r2] multiplicand
+r1 <- Mem[r2+1] multiplier
+r3 <- 0 initialize counter
+r2 <- 0 initialize result
+LOOP
+  if r1 == r3 goto DONE
+  r3 <- r3 + 1 (increment counter)
+  r2 <- r2 + r0 (add multiplicand to result)
+  goto LOOP
+
+DONE
+r0 <- r2 (move result)
+r2 <- address of parameters
+Mem[r2+3] <- r0 (save result to memory)
+halt
+
+%
+
+// initialize r2 to the address of the parameters
+// LI r2 <- const8
+0: 26
+1: 000001 10
+
+// load the multiplicand into r0
+// LDM r0 <- Mem[r2 + 0]
+2: 10 00 0000
+3: 000111 00
+
+// load the multiplier into r1
+// LDM r1 <- Mem[r2 + 1]
+4: 10 00 0001
+5: 000111 01
+
+// initialize counter r3 to 0
+// LI r3 <- const8
+6: 0
+7: 000001 11
+
+// initialize result r2 to 0
+// LI r2 <- const8
+8: 0
+9: 000001 10
+
+///////////////////////////////////////////////////////////////////////////////
+// LOOP
+///////////////////////////////////////////////////////////////////////////////
+
+// check if counter has reached multiplier, jump out of loop
+// BE if r1 == r3 then r7 <- r7 + 6
+10: 01 11 0110
+11: 000100 00
+
+// increment counter
+// ADDI r3 <- r3 + 1
+12: 11 00 0001
+13: 001011 11
+
+// add the multiplicand to the result
+// ADD r2 <- r2 + r0
+14: 10 00 0000
+15: 000011 10
+
+// goto LOOP
+// JI -8
+16: 11111000
+17: 000101 00
+
+///////////////////////////////////////////////////////////////////////////////
+// DONE
+///////////////////////////////////////////////////////////////////////////////
+
+// move result to r0
+// MOVE r0 <- r2
+18: 10 00 0000
+19: 001100 00
+
+// set r2 to the address of the parameters
+// LI r2 <- const8
+20: 26
+21: 000001 10
+
+// store the result from r0 to memory
+// SWM r0 -> Mem[r2 + 2]
+22: 10 00 0010
+23: 001000 00
+
+// HALT
+24: 0
+25: 000000 00
+
+///////////////////////////////////////////////////////////////////////////////
+// Data
+///////////////////////////////////////////////////////////////////////////////
+
+// Parameters
+26: 11		// Multiplicand
+27: 10		// Multiplier
+28: 0		// Result
+
+// end of proj4.mem

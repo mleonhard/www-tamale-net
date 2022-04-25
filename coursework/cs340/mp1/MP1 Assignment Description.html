@@ -1,0 +1,226 @@
+<html>
+<head>
+<title>CS 340 - Public/Private Key Encrypting</title>
+</head>
+
+<body>
+<h2>CS 340 - Public/Private Key Encrypting</h2>
+<h3>Due: Thursday 9/8/2005 at 11:59 pm</h3>
+
+<p><font color = "#FF0000">The -o flag for the key creation program is
+manditory.  The extra credit applies only to the -c flag.  I moved 
+some paragraphs around in the write
+up below to make this point clearer.</font>
+<p><font color = "#FF0000">Small typing error in XML format for private key pair. Instead of "dvalue" it was written "evalue". The current format below is the corrected one.</font>
+</p>
+For this project, you are to write two programs that will
+perform <a href="http://www.profactor.at/~wstoec/rsa.html">
+Public-Key Encryption using the RSA Algorithm</a>.  The first
+program will create the public-key private-key pair.  The
+second program will use a key to encrypt/decrypt an ASCII
+text message.
+<p>
+The RSA alogorithm needs three related numbers to work.  These
+number will be called e, d and n.  The pair (e,n) compose the
+public-key, while the pair (d,n) compose the private key.  
+To encrypt a value m into m' we preform the operation of:
+<pre>
+     m' = m<sup>e</sup> mod n
+</pre>
+To decrypt the value of m' back to m, we perform the operation of:
+<pre>
+     m  = m'<sup>d</sup> mod n
+</pre>
+Note that the value of m must be less than n in order for this to work.
+Since we are encrypting/decrypting ASCII text messages and the largest
+ASCII value is 127, the value of n must be at least 128.
+<p>
+The creation of the values of e, d and n start with the selection
+of two prime numbers p and q.  The value of n is the result of p * q.
+Thus we need to make sure that the values p and q are large enough
+so that the resulting value of n is larger than any value we wish
+to encrypt.
+<pre>
+     n  = p * q
+</pre>
+<p>
+To create e and d, we first must create a value &phi; which is:
+<pre>
+     &phi;  = (p-1) * (q-1)
+</pre>
+The value of e some arbitrary number that is less than n and relatively
+prime to &phi;.  There should be many numbers that fit this criteria
+and any one is valid.  A number x is relatively prime of y if they have
+no divisor in common other than 1.  This means the GCD (Greatest Common 
+Divisor) is 1.  The GCD of two numbers can be computed via the 
+<a href="http://en.wikipedia.org/wiki/Euclidean_algorithm">
+Euclidean Algorithm</a>.
+<p>
+The value of d can be calculated once e has been determined. The value
+of d is the inverse of e modulo &phi;.  Which means
+<pre>
+     (e * d) mod &phi; = 1
+</pre>
+The calculation of both e and d is done via trial and error.  You start
+with a possible value and see if it is valid.  If not, you change the
+value and try again.  This is done in a loop which exits when a valid
+value is found.  The code for calculation of e, d and n from the values
+of p and q can be found at
+<a href="http://www.profactor.at/~wstoec/rsa.html">
+http://www.profactor.at/~wstoec/rsa.html</a>.  Note that this code is
+written in JavaScript and not commented.  If you to use this code, you
+must
+<ol>
+<li>Explicitly cite the location of the original code!
+<li>Add comments to explain its usage.
+<li>Translate the code from JavaScript.
+</ol>
+<p>
+<h3>Key Creation Program</h3>
+The keys that are to be created by the first program and
+used by the second program are to be stored in files using
+the XML format.  Note that the names of tags must match what
+is given below, but the spacing need not.  Also, the order of
+the e and n values in the public key and the order of the d and
+n values in the private key can be reversed.
+<p>
+The public key is to be store as:
+<pre>
+     &lt;rsakey&gt;
+        &lt;evalue&gt;value-of-e&lt;/evalue&gt;
+        &lt;nvalue&gt;value-of-n&lt;/nvalue&gt;
+     &lt;/rsakey&gt;
+</pre>
+The private key is to be stored as:
+<pre>
+     &lt;rsakey&gt;
+        &lt;dvalue&gt;value-of-d&lt;/dvalue&gt;
+        &lt;nvalue&gt;value-of-n&lt;/nvalue&gt;
+     &lt;/rsakey&gt;
+</pre>
+
+<p>
+The program that creates the keys will need the values of p and q
+as input.  Your program must allow these values can be given as command 
+line arguments or allow the user to be prompted for these values while 
+the program is being executed.  Thus your program must parse the command
+line arguments are check if two integer values are given.  If they are
+given, these are the values to be used for p and q.  If they are not
+given, prompt the user to enter in these values.  This prompting is to be
+done via a text-based interface.  Once the values of p and q are supplied,
+your program must verify that they are different prime numbers.  If they
+are not different prime numbers, 
+an error is to be reported to the
+user and your program is to perform some "reasonable action".  
+Your program must also verify that the prime
+numbers result in a value of n that is greater than 127.  If the
+value of n is less than or equal to 127, 
+an error is to be reported to the
+user and your program is to perform some "reasonable action".  
+<p>
+The filenames that are used to contain the keys can be anything.  Your
+program should use some default name if the user does not specify
+a name (such as key1, key2 or pubkey, prikey).  The user is to be allowed
+specify the names via the command line flag of <b>-o</b>.  Immediately
+following
+the flag two words should be given which will be used to hold the
+public key and the private key.  If the user does not provide two 
+words after the -o flag, 
+an error is to be reported to the
+user and your program is to perform some "reasonable action".  
+<p>
+The command line arguments can be given in any order as long as the
+two words for the key filenames immediately follow the -o flag if
+present.
+<p>
+<b>For 5 points extra credit</b>, your program can randomly generate two
+valid prime numbers for p and q.  The user is to be able to inform your program
+to do this by either specifying the command line argument flag of <b>-c</b>
+or answering a prompt if the prime numbers are not given on the command line.
+To receive the extra credit, your program must allow both methods.  The 
+prime numbers generated must not always be the same pair of prime numbers
+(i.e. you can't just hardcode two prime numbers into your program). 
+<h3>Encryption Program</h3>
+In order to keep things simple and verifiable, we will encrypt/decrypt one
+ASCII character at a time.  The form of an encrypted file will be a
+list of decimal integers one to a line.  Each line will correspond to
+a single ASCII character in the original file.  
+Since we want to use the same program for both encryption and decryption,
+we will specify the command line flag of -e to encrypt and -d to decrypt.
+While the algorithm is the same for both encryption and decryption, the
+format of the input/output files alternate whether we are encrypting
+or decrypting (hence the reason why we need these two flags).  If
+neither the -e or the -d flag is given,
+an error is to be reported to the
+user and your program is to perform some "reasonable action".  
+<p>
+The user can specify the file to be encrypted or decrypted on the
+command line with the flag of -f.  The word immediately following
+the -f flag is the name of the file to be encrypted/decrypted.
+If the -f flag is not given, the program is to prompt the user for
+a filename.  If the file does not exist or no name is given,
+an error is to be reported to the
+user and your program is to perform some "reasonable action".  
+When encrypting a file, the file is expected to be an ASCII text file.
+When decrypting a file, the file is expected to contain one decimal
+integer value per line.  If the file specified does not conform,
+an error is to be reported to the
+user and your program is to perform some "reasonable action".  
+<p>
+The user can specify the key file to be used on the command line
+with the flag of -k.  The word immediately following the -k flag
+is the name of the file that contains the key to be used.  If the
+-k flag is not given, the program is to prompt the user for a
+filename.  If the file does not exist or no name is given,
+an error is to be reported to the
+user and your program is to perform some "reasonable action".  
+If the key file is not in the specified XML format,
+an error is to be reported to the
+user and your program is to perform some "reasonable action".  
+<p>
+The user can specify the name of the resulting encrypted/decrypted
+file on the command line with the flag of -o.  The word immediately
+following the -o flag is to be used as the filename to store the
+resulting file.  If the -o flag is not give, the program is to prompt
+the user for a filename.  If no name is given,
+an error is to be reported to the
+user and your program is to perform some "reasonable action".  
+<p>
+One issue that may arise with this program is the size of the integer
+values as a result of the exponentiation required by the program.
+You may note that this program may create encrypted files that are
+not that difficult to decode.  This is the result of only encoding
+one ASCII character at a time and allowing the use of small prime numbers 
+for p and q.  
+<p>
+<h3>How to turn in your work</h3>
+Your program is to be submitted electronically via the <b>turnin</b> 
+command on the LINUX machines.  The project name for this is <b>mp1</b>. 
+All programs are expected to be written in good programming style. 
+<p>Turnin your program electronically using the &quot;turnin&quot; command <i>from 
+your CS account </i>as follows:</p>
+
+<blockquote>
+  <code>turnin -c cs340 -p mp1&nbsp; [your project directory]</code>
+</blockquote>
+where the [your project directory] is the directory name under which you have 
+all your files related to this programming problem. The turnin command will 
+automatically compress the data under your directory, so there is no need to do 
+the compression by yourself.
+<p><font color="#008080">Notice you can only invoke turnin command on the Linux 
+machines in the lab or after logging into the server machine oscar.cs.uic.edu.</font></p>
+<p><br>
+If you want to verify that your project was turned in, look in the turnin 
+directory for a file with your userid. For instance for this project, from your 
+CS account you would type:<br>
+&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp; turnin -c cs340 -v</p>
+
+<p>Note that you can execute turnin as many times as you would like, up until 
+the program deadline when turnin will be disabled for this project. Each time 
+you execute turnin for a project, you overwrite all of what you had turned in 
+previously for that project.It <b>does not</b> work in an incremental way.</p>
+<p>
+<h4><a href="welcome.html">CS 340 - Fall 2005</a></h4>
+</body>
+</html>

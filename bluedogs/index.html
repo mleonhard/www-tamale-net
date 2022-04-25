@@ -1,0 +1,248 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Bluedogs Artificial Life Simulation</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+<div class=page>
+
+<h1>Bluedogs Artificial Life Simulation</h1>
+
+<p><a href="/">Home</a></p>
+
+<p>Bluedogs is a graphical program that simulates artificial life
+forms.  It is a rectangular world with green food that grows and
+spreads.  The little creatures are like bacteria.  They wander around
+eating food, splitting off children, and dying when their energy runs
+out.</p>
+
+<p>Each bacterium has a sequence of bytes that serve as instructions
+for a virtual machine.  These instructions determine the behavior of
+the bacterium.  I call the bytes the <em>genotype</em>.  When a
+bacterium reproduces, its child gets a copy of its genotype with a few
+random mutations.</p>
+
+<h2>Screenshots</h2>
+
+<p>
+  The simulation maintains at least 50 live creatures.  If the
+  population falls below 50, it creates new creatures with random
+  genotypes and places them at random positions.  Initially, you will
+  see creatures that are unable to turn.  They and their
+  offspring eat rows through the food:
+  <br>
+  <img src="bluedogs-1.2.0.capture1.png" alt="Bluedogs 1.2.0 screenshot 1" width="608" height="429">
+  </p>
+
+<p>
+  Suddenly, a creature is born that has the ability to turn!  Its
+  offspring explode all over the world:
+
+  <br>
+  <img src="bluedogs-1.2.0.capture2.png" alt="Bluedogs 1.2.0 screenshot 2" width="608" height="429">
+  </p>
+
+<p>
+  They fill the planet and begin consuming every resource:
+  <br>
+  <img src="bluedogs-1.2.0.capture3.png" alt="Bluedogs 1.2.0 screenshot 3" width="608" height="429">
+  </p>
+
+<p>
+  When the food is consumed, they die off:
+  <br>
+  <img src="bluedogs-1.2.0.capture4.png" alt="Bluedogs 1.2.0 screenshot 4" width="608" height="429">
+  </p>
+<p>
+  After several such boom-and-bust cycles, the creatures that survived
+  are those that eat slowly and reproduce less often.  The simulation
+  usually reaches a stable state, with populations fluctuating between
+  200 and 1000 animals, and a moderate level of food:
+  <br>
+  <img src="bluedogs-1.2.0.capture5.png" alt="Bluedogs 1.2.0 screenshot 5" width="608" height="429">
+  </p>
+
+<h2>Usage</h2>
+<p>Run <code>bluedogs.exe</code> or <code>./bluedogs</code>.</p>
+
+<p>Each update of the simulation is called a <em>day</em>.  Each
+bacterium has a chance to eat, move, and reproduce every day.
+Normally, the screen is drawn each day of the simulation, so you can
+follow the bacteria in detail.  Clear the check-box to make the
+program redraw the screen once a second.  This provides only snapshot
+views of the activity but allows the simulation to run much
+faster.</p>
+
+<p>The circular graph is a view into the color chooser.  Every
+bacterium is assigned a point in the circle.  That point is translated
+into polar coordinates, (&theta;, r).  The polar coordinates are then
+taken to be the Hue and Saturation values: H=&theta;,
+S=r.  Thus, each bacterium's color is determined by its position in
+the circle.  When a bacterium reproduces, its child is assigned a
+position very nearby.  The result is that families of bacteria tend to
+have the same shade of color.</p>
+
+<p>A bacterium's energy level is shown by its brightness.  This is the
+V component of the bacterium's color.  See <a
+href="http://en.wikipedia.org/wiki/HSV_color_space">HSV Color
+Space</a> on WikiPedia.</p>
+
+<h2>Download</h2>
+<ul>
+<li>Windows version:
+    <a href="Bluedogs-1.2.0.win32.zip">Bluedogs-1.2.0.win32.zip</a><br>
+    MD5: 00fa7838197b788e5e91f134083010d7<br>
+    SHA-1: 42ab096394f1163d8fc3bc19373e8f164a2605f5<br>
+    This zip file includes bluedogs.exe and all required DLLs and files.
+    It has been tested on Windows XP SP2.
+    </li>
+<li>Unix source code:
+    <a href="bluedogs-1.2.0.tar.gz">bluedogs-1.2.0.tar.gz</a><br>
+    MD5: 37c3e32d9da33a3777ee5cabc443c492<br>
+    SHA-1: 796396604aa344848b462716a8281d9ed21790d9<br>
+    Compiles with g++, SDL-1.2.11, and SDL_image-1.2.5 with PNG support.
+    Run <code>make && ./bluedogs</code>.
+    </li>
+</ul>
+
+<h2>Change Log</h2>
+<h3>2007-07-20 Version 1.2.0:</h3>
+<ul>
+<li>The colors look great! :D</li>
+<li>Removed config data from Field, now using M_config-&gt;</li>
+<li>Removed cached critter head colors from View</li>
+<li>ColorSim draws its round background with SDL_gfxPrimitives from SDL_gfx by
+    Andreas Schiffler,
+    <a href="http://www.ferzkopp.net/joomla/content/view/19/14/"
+    >http://www.ferzkopp.net/joomla/content/view/19/14/</a>
+    </li>
+<li>Created DrawColorSim to show the placement of molecules</li>
+<li>Now View displays each critter with its molecule's color</li>
+<li>ColorSim keeps a molecule for every critter, position determines color</li>
+<li>Wrote function that determines how closely two critters are related</li>
+<li>Wrote code to prune and contract population tree</li>
+</ul>
+
+<h3>2007-07-14 Version 1.1.0:</h3>
+<ul>
+<li><a href="old/Bluedogs-1.1.0.win32.zip">Bluedogs-1.1.0.win32.zip</a><br>
+    MD5: 4345bb17dc5fc5c0b1b32f477b681dde<br>
+    SHA-1: 0dd83957a2e62df1e6a5a835d69a5f1b348dccd9<br>
+    </li>
+<li><a href="old/bluedogs-1.1.0.tar.gz">bluedogs-1.1.0.tar.gz</a><br>
+    MD5: 2cdf2ca1617cb63917d9ae106d9d8b7d<br>
+    SHA-1: 3200f60488f74af5e48756a68198662761cb51d6<br>
+    </li>
+<li>Prepared class structure for addition of family tree and dynamic coloring</li>
+<li>Added checkbox to main screen with "draw every day" label.  USABILITY!</li>
+<li>Make checkbox class with label</li>
+<li>Sim now handles creature updates and death, using linked list</li>
+<li>Split Sim into Sim & Field classes</li>
+<li>Replace constants with passed parameter</li>
+<li>Field::M_food is now deleted properly with delete[] M_food<br>
+    See: <a href="http://www.matasano.com/log/663/">http://www.matasano.com/log/663/</a>
+    </li>
+<li>Fixed error in growFood() where first cells didn't grow as fast as others</li>
+</ul>
+
+<h3>2007-07-06 Version 1.0.0:</h3>
+<ul>
+<li><a href="old/Bluedogs-1.0.0.win32.zip">Bluedogs-1.0.0.win32.zip</a><br>
+    MD5: 56be5d58be649685cf3fed057a35a502<br>
+    SHA-1: 6bfcacab06bbdeab25c946c285ca8a96ce2c4790
+    </li>
+<li><a href="old/bluedogs-1.0.0.tar.gz">bluedogs-1.0.0.tar.gz</a><br>
+    MD5: fe281dc7113efaa3d3669f5c93579c87<br>
+    SHA-1: e1fe972ce6c79446ba33a8569aeb2ce1057c64b3
+    </li>
+<li>Created LICENSE file with the "MIT License"</li>
+<li>Created Makefile for building on unix.  Thanks to
+    <a href="http://web.ics.purdue.edu/~wehlhard/">Orborde</a>
+    in ##crypto@freenode for help with this.</li>
+<li>Double-check object deletions, make sure it happens only once</li>
+<li>Document methods in JavaDoc format</li>
+<li>Click on rate printout to switch between fast and slow
+    rendering</li>
+<li>Added faint black background to font</li>
+<li>Added disabled copy constructors to Critter, Bacteria, and Field.
+    All classes which are unsafe for default copy constructors are now
+    protected.</li>
+<li>Check passing of objects, make sure that objects are passed by
+    pointer or reference, not by value</li>
+<li>Add constructors and destructors</li>
+<li>Rewrite README file</li>
+<li>Move accessors out of header file</li>
+<li>Fixed filenames in headers</li>
+<li>Updated copyright in headers</li>
+<li>Created build.bat, now I can build in emacs on Windows</li>
+<li>Imported into cvs</li>
+</ul>
+
+<h3>Older Versions 2003-2005:</h3>
+<ul>
+<li>Download old versions from <a href="old/">old/</a></li>
+<li>Made proper display model</li>
+<li>removed quad trees and replaced with big array of pointers</li>
+<li>Create text display class that has full alphabet, numbers, and
+    symbols</li>
+<li>implement bacteria-like reproduction (splitting... 
+    <a href="http://en.wikipedia.org/wiki/Mitosis">mitosis</a>?)</li>
+<li>implement sexual reproduction</li>
+<li>Fixed Makefile compiler options to disable assertions
+    -DNDEBUG</li>
+<li>Critter now inherits from ListNode</li>
+<li>Population now inherits from QuadNode, reduced lookup from O(N) to
+    O(log N)?)</li>
+<li>Implemented linked list class, ListNode (in trees.cc and
+    trees.hh)</li>
+<li>Implemented Quad-Tree class, QuadNode (in trees.cc and
+    trees.hh)</li>
+<li>Add on-screen statistics:
+  <ul>
+  <li>Date</li>
+  <li>FPS (cycles per second)</li>
+  <li>Number of living critters</li>
+  </ul>
+  </li>
+<li>Make Critter class easily extended (for BlueDog, Predator,
+    etc.)</li>
+<li>Weed out unneeded inclusions from each file</li>
+<li>Encapsulate all code in classes</li>
+<li>Learn C++ Exception syntax and implement it with SDL class</li>
+<li>Change display of bluedogs to blue boxes with arrows for direction
+    (it turns out to just be a bar for the head)</li>
+</ul>
+
+<h2>License</h2>
+
+<p>Copyright &copy; 2007 Michael Leonhard</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p>
+
+<p>(This is known as the <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.)</p>
+
+<p><a href="/">Home</a></p>
+
+<hr>
+<p>Copyright &copy; 1999-2012 Michael Leonhard</p>
+</div>
+</body>
+</html>

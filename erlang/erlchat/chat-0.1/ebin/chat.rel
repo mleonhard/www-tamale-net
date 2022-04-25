@@ -1,0 +1,18 @@
+{release,
+	{"chat","0.1b"},
+	{erts, "5.4"},
+	[	{kernel, "2.10.6"},
+		{stdlib, "1.13.5"},
+		{chat, "0.1"}]}.
+% To make a release tar.gz file:
+% cd("lib/chat-0.1/src").
+% [make:all(), lm()]. 
+% cd("../ebin").
+% cd("../../..").
+% systools:make_script("chat", [local]).
+% systools:make_tar("chat").
+
+%% Compiling and testing
+% [cd("lib/chat-0.1/src"), make:all(), application:start(chat)].
+% [application:stop(chat), make:all(), lm(), application:start(chat)].
+% application:stop(chat).

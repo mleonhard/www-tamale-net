@@ -1,0 +1,871 @@
+$ ./mp5
+King's Corner (MP5)
+Michael Leonhard (mleonhar)
+CS340, Fall 3005, Instructor: Pat Troy, TA: Nitin Jindal
+
+Preparing for new round.  Shuffling deck.
+The computer deals.
+
+Pile 1: 5H
+Pile 2: 3C
+Pile 3: 4S
+Pile 4: 8C
+Pile 5:
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 7 cards.
+Your hand:  QS QH QC 9D 7S 7D AS
+Draw pile has many cards.
+Move> play 7d on pile 4
+
+Your command was not recognized.  Type H for help.
+
+Pile 1: 5H
+Pile 2: 3C
+Pile 3: 4S
+Pile 4: 8C
+Pile 5:
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 7 cards.
+Your hand:  QS QH QC 9D 7S 7D AS
+Draw pile has many cards.
+Move> h
+
+King's Corner commands:
+ Q                 - Quit: quit the program
+ H                 - Help: show this information
+ A                 - About: tell about the programer and program
+ D                 - Draw: draw a card and end your turn
+ L <Card> <Pile>   - Lay: lay a card on a pile
+ M <Pile1> <Pile2> - Move: move Pile1 on top of Pile2
+
+The game consists of several rounds. A round is played until a player has layed
+down all cards in the hand.  The player still holding cards receives penalty
+points: 10 point for each King and 1 point for every other card.  Rounds are
+played until one player receives 25 or more penalty points.  The winner of the
+game is the player with the fewest points.  Cards may be stacked in piles, in
+descending rank and alternating color.  Piles 1-4 may begin with any card.
+Piles 5-8 may begin only with Kings.  For detailed rules, please visit:
+http://www.pagat.com/domino/kingscorners.html
+
+[press enter to continue]
+
+
+Pile 1: 5H
+Pile 2: 3C
+Pile 3: 4S
+Pile 4: 8C
+Pile 5:
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 7 cards.
+Your hand:  QS QH QC 9D 7S 7D AS
+Draw pile has many cards.
+Move> p 7d 4
+
+Your command was not recognized.  Type H for help.
+
+Pile 1: 5H
+Pile 2: 3C
+Pile 3: 4S
+Pile 4: 8C
+Pile 5:
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 7 cards.
+Your hand:  QS QH QC 9D 7S 7D AS
+Draw pile has many cards.
+Move> l 7d 4
+
+You played 7D on Pile 4.
+
+Pile 1: 5H
+Pile 2: 3C
+Pile 3: 4S
+Pile 4: 8C 7D
+Pile 5:
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 7 cards.
+Your hand:  QS QH QC 9D 7S AS
+Draw pile has many cards.
+Move> m 3 1
+
+You moved Pile 3 to Pile 1.
+
+Pile 1: 5H 4S
+Pile 2: 3C
+Pile 3:
+Pile 4: 8C 7D
+Pile 5:
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 7 cards.
+Your hand:  QS QH QC 9D 7S AS
+Draw pile has many cards.
+Move> m 2 1
+
+Pile 2 may not be moved to Pile 1.
+
+Pile 1: 5H 4S
+Pile 2: 3C
+Pile 3:
+Pile 4: 8C 7D
+Pile 5:
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 7 cards.
+Your hand:  QS QH QC 9D 7S AS
+Draw pile has many cards.
+Move> l 9d 3
+
+You played 9D on Pile 3.
+
+Pile 1: 5H 4S
+Pile 2: 3C
+Pile 3: 9D
+Pile 4: 8C 7D
+Pile 5:
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 7 cards.
+Your hand:  QS QH QC 7S AS
+Draw pile has many cards.
+Move> m 4 3
+
+You moved Pile 4 to Pile 3.
+
+Pile 1: 5H 4S
+Pile 2: 3C
+Pile 3: 9D 8C 7D
+Pile 4:
+Pile 5:
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 7 cards.
+Your hand:  QS QH QC 7S AS
+Draw pile has many cards.
+Move> l as 4
+
+You played AS on Pile 4.
+
+Pile 1: 5H 4S
+Pile 2: 3C
+Pile 3: 9D 8C 7D
+Pile 4: AS
+Pile 5:
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 7 cards.
+Your hand:  QS QH QC 7S
+Draw pile has many cards.
+Move> d
+
+You drew TH.
+Computer played 2H on Pile 2.
+Computer moved Pile 4 to Pile 2.
+Computer played TD on Pile 4.
+Computer drew a card.
+
+Pile 1: 5H 4S
+Pile 2: 3C 2H AS
+Pile 3: 9D 8C 7D
+Pile 4: TD
+Pile 5:
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 6 cards.
+Your hand:  QS QH QC TH 7S
+Draw pile has many cards.
+Move> d
+
+You drew TS.
+Computer drew a card.
+
+Pile 1: 5H 4S
+Pile 2: 3C 2H AS
+Pile 3: 9D 8C 7D
+Pile 4: TD
+Pile 5:
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 7 cards.
+Your hand:  QS QH QC TS TH 7S
+Draw pile has many cards.
+Move> d
+
+You drew 2D.
+Computer drew a card.
+
+Pile 1: 5H 4S
+Pile 2: 3C 2H AS
+Pile 3: 9D 8C 7D
+Pile 4: TD
+Pile 5:
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 8 cards.
+Your hand:  QS QH QC TS TH 7S 2D
+Draw pile has many cards.
+Move> d
+
+You drew 3S.
+Computer played KC on Pile 5.
+Computer drew a card.
+
+Pile 1: 5H 4S
+Pile 2: 3C 2H AS
+Pile 3: 9D 8C 7D
+Pile 4: TD
+Pile 5: KC
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 8 cards.
+Your hand:  QS QH QC TS TH 7S 3S 2D
+Draw pile has many cards.
+Move> l qh 5
+
+You played QH on Pile 5.
+
+Pile 1: 5H 4S
+Pile 2: 3C 2H AS
+Pile 3: 9D 8C 7D
+Pile 4: TD
+Pile 5: KC QH
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 8 cards.
+Your hand:  QS QC TS TH 7S 3S 2D
+Draw pile has many cards.
+Move> l ts 5
+
+Card TS may not be played on Pile 5.
+
+Pile 1: 5H 4S
+Pile 2: 3C 2H AS
+Pile 3: 9D 8C 7D
+Pile 4: TD
+Pile 5: KC QH
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 8 cards.
+Your hand:  QS QC TS TH 7S 3S 2D
+Draw pile has many cards.
+Move> d
+
+You drew KD.
+Computer played JS on Pile 5.
+Computer moved Pile 4 to Pile 5.
+Computer played TC on Pile 4.
+Computer moved Pile 3 to Pile 4.
+Computer played 9H on Pile 3.
+Computer drew a card.
+
+Pile 1: 5H 4S
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: TC 9D 8C 7D
+Pile 5: KC QH JS TD
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 6 cards.
+Your hand:  KD QS QC TS TH 7S 3S 2D
+Draw pile has many cards.
+Move> l kd 8
+
+You played KD on Pile 8.
+
+Pile 1: 5H 4S
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: TC 9D 8C 7D
+Pile 5: KC QH JS TD
+Pile 6:
+Pile 7:
+Pile 8: KD
+Computer player has 6 cards.
+Your hand:  QS QC TS TH 7S 3S 2D
+Draw pile has many cards.
+Move> l qs 8
+
+You played QS on Pile 8.
+
+Pile 1: 5H 4S
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: TC 9D 8C 7D
+Pile 5: KC QH JS TD
+Pile 6:
+Pile 7:
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  QC TS TH 7S 3S 2D
+Draw pile has many cards.
+Move> d
+
+You drew 4D.
+Computer played KH on Pile 6.
+Computer drew a card.
+
+Pile 1: 5H 4S
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: TC 9D 8C 7D
+Pile 5: KC QH JS TD
+Pile 6: KH
+Pile 7:
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  QC TS TH 7S 4D 3S 2D
+Draw pile has many cards.
+Move> l qc 6
+
+You played QC on Pile 6.
+
+Pile 1: 5H 4S
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: TC 9D 8C 7D
+Pile 5: KC QH JS TD
+Pile 6: KH QC
+Pile 7:
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  TS TH 7S 4D 3S 2D
+Draw pile has many cards.
+Move> d
+
+You drew AH.
+Computer drew a card.
+
+Pile 1: 5H 4S
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: TC 9D 8C 7D
+Pile 5: KC QH JS TD
+Pile 6: KH QC
+Pile 7:
+Pile 8: KD QS
+Computer player has 7 cards.
+Your hand:  TS TH 7S 4D 3S 2D AH
+Draw pile has many cards.
+Move> d
+
+You drew 6C.
+Computer played 6S on Pile 4.
+Computer moved Pile 1 to Pile 4.
+Computer played 6H on Pile 1.
+Computer played 5S on Pile 1.
+Computer drew a card.
+
+Pile 1: 6H 5S
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: TC 9D 8C 7D 6S 5H 4S
+Pile 5: KC QH JS TD
+Pile 6: KH QC
+Pile 7:
+Pile 8: KD QS
+Computer player has 5 cards.
+Your hand:  TS TH 7S 6C 4D 3S 2D AH
+Draw pile has many cards.
+Move> l 4d 1
+
+You played 4D on Pile 1.
+
+Pile 1: 6H 5S 4D
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: TC 9D 8C 7D 6S 5H 4S
+Pile 5: KC QH JS TD
+Pile 6: KH QC
+Pile 7:
+Pile 8: KD QS
+Computer player has 5 cards.
+Your hand:  TS TH 7S 6C 3S 2D AH
+Draw pile has many cards.
+Move> l 3s 1
+
+You played 3S on Pile 1.
+
+Pile 1: 6H 5S 4D 3S
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: TC 9D 8C 7D 6S 5H 4S
+Pile 5: KC QH JS TD
+Pile 6: KH QC
+Pile 7:
+Pile 8: KD QS
+Computer player has 5 cards.
+Your hand:  TS TH 7S 6C 2D AH
+Draw pile has many cards.
+Move> l 2d 1
+
+You played 2D on Pile 1.
+
+Pile 1: 6H 5S 4D 3S 2D
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: TC 9D 8C 7D 6S 5H 4S
+Pile 5: KC QH JS TD
+Pile 6: KH QC
+Pile 7:
+Pile 8: KD QS
+Computer player has 5 cards.
+Your hand:  TS TH 7S 6C AH
+Draw pile has many cards.
+Move> d
+
+You drew KS.
+Computer played AC on Pile 1.
+Computer drew a card.
+
+Pile 1: 6H 5S 4D 3S 2D AC
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: TC 9D 8C 7D 6S 5H 4S
+Pile 5: KC QH JS TD
+Pile 6: KH QC
+Pile 7:
+Pile 8: KD QS
+Computer player has 5 cards.
+Your hand:  KS TS TH 7S 6C AH
+Draw pile has many cards.
+Move> d
+
+You drew JH.
+Computer drew a card.
+
+Pile 1: 6H 5S 4D 3S 2D AC
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: TC 9D 8C 7D 6S 5H 4S
+Pile 5: KC QH JS TD
+Pile 6: KH QC
+Pile 7:
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  KS JH TS TH 7S 6C AH
+Draw pile has many cards.
+Move> l jh 6
+
+You played JH on Pile 6.
+
+Pile 1: 6H 5S 4D 3S 2D AC
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: TC 9D 8C 7D 6S 5H 4S
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH
+Pile 7:
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  KS TS TH 7S 6C AH
+Draw pile has many cards.
+Move> m tc 5
+
+Your "M" command was malformed.  Proper format: M <Pile1> <Pile2>
+For example, to move pile 3 to pile 1, type M 3 1
+
+Pile 1: 6H 5S 4D 3S 2D AC
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: TC 9D 8C 7D 6S 5H 4S
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH
+Pile 7:
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  KS TS TH 7S 6C AH
+Draw pile has many cards.
+Move> m 4 5
+
+Pile 4 may not be moved to Pile 5.
+
+Pile 1: 6H 5S 4D 3S 2D AC
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: TC 9D 8C 7D 6S 5H 4S
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH
+Pile 7:
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  KS TS TH 7S 6C AH
+Draw pile has many cards.
+Move> m 4 6
+
+You moved Pile 4 to Pile 6.
+
+Pile 1: 6H 5S 4D 3S 2D AC
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4:
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S
+Pile 7:
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  KS TS TH 7S 6C AH
+Draw pile has many cards.
+Move> l 7s 4
+
+You played 7S on Pile 4.
+
+Pile 1: 6H 5S 4D 3S 2D AC
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: 7S
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S
+Pile 7:
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  KS TS TH 6C AH
+Draw pile has many cards.
+Move> m 1 4
+
+You moved Pile 1 to Pile 4.
+
+Pile 1:
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S
+Pile 7:
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  KS TS TH 6C AH
+Draw pile has many cards.
+Move> l th 8
+
+Card TH may not be played on Pile 8.
+
+Pile 1:
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S
+Pile 7:
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  KS TS TH 6C AH
+Draw pile has many cards.
+Move> l ah 1
+
+You played AH on Pile 1.
+
+Pile 1: AH
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S
+Pile 7:
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  KS TS TH 6C
+Draw pile has many cards.
+Move> d
+
+You drew 3H.
+Computer drew a card.
+
+Pile 1: AH
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S
+Pile 7:
+Pile 8: KD QS
+Computer player has 7 cards.
+Your hand:  KS TS TH 6C 3H
+Draw pile has many cards.
+Move> l 3h 6
+
+You played 3H on Pile 6.
+
+Pile 1: AH
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S 3H
+Pile 7:
+Pile 8: KD QS
+Computer player has 7 cards.
+Your hand:  KS TS TH 6C
+Draw pile has many cards.
+Move> l ks 7
+
+You played KS on Pile 7.
+
+Pile 1: AH
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S 3H
+Pile 7: KS
+Pile 8: KD QS
+Computer player has 7 cards.
+Your hand:  TS TH 6C
+Draw pile has many cards.
+Move> d
+
+You drew 7H.
+Computer played 2S on Pile 6.
+Computer moved Pile 1 to Pile 6.
+Computer played QD on Pile 7.
+Computer played 7C on Pile 1.
+Computer drew a card.
+
+Pile 1: 7C
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S 3H 2S AH
+Pile 7: KS QD
+Pile 8: KD QS
+Computer player has 5 cards.
+Your hand:  TS TH 7H 6C
+Draw pile has many cards.
+Move> d
+
+You drew 8S.
+Computer drew a card.
+
+Pile 1: 7C
+Pile 2: 3C 2H AS
+Pile 3: 9H
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S 3H 2S AH
+Pile 7: KS QD
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  TS TH 8S 7H 6C
+Draw pile has many cards.
+Move> l 8s 3
+
+You played 8S on Pile 3.
+
+Pile 1: 7C
+Pile 2: 3C 2H AS
+Pile 3: 9H 8S
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S 3H 2S AH
+Pile 7: KS QD
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  TS TH 7H 6C
+Draw pile has many cards.
+Move> l7h 3
+
+Your command was not recognized.  Type H for help.
+
+Pile 1: 7C
+Pile 2: 3C 2H AS
+Pile 3: 9H 8S
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S 3H 2S AH
+Pile 7: KS QD
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  TS TH 7H 6C
+Draw pile has many cards.
+Move> l 7h 3
+
+You played 7H on Pile 3.
+
+Pile 1: 7C
+Pile 2: 3C 2H AS
+Pile 3: 9H 8S 7H
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S 3H 2S AH
+Pile 7: KS QD
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  TS TH 6C
+Draw pile has many cards.
+Move> l 6c 3
+
+You played 6C on Pile 3.
+
+Pile 1: 7C
+Pile 2: 3C 2H AS
+Pile 3: 9H 8S 7H 6C
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S 3H 2S AH
+Pile 7: KS QD
+Pile 8: KD QS
+Computer player has 6 cards.
+Your hand:  TS TH
+Draw pile has many cards.
+Move> d
+
+You drew 3D.
+Computer played 5D on Pile 3.
+Computer played 4C on Pile 3.
+Computer drew a card.
+
+Pile 1: 7C
+Pile 2: 3C 2H AS
+Pile 3: 9H 8S 7H 6C 5D 4C
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S 3H 2S AH
+Pile 7: KS QD
+Pile 8: KD QS
+Computer player has 5 cards.
+Your hand:  TS TH 3D
+Draw pile has many cards.
+Move> l 3d 3
+
+You played 3D on Pile 3.
+
+Pile 1: 7C
+Pile 2: 3C 2H AS
+Pile 3: 9H 8S 7H 6C 5D 4C 3D
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S 3H 2S AH
+Pile 7: KS QD
+Pile 8: KD QS
+Computer player has 5 cards.
+Your hand:  TS TH
+Draw pile has many cards.
+Move> d
+
+You drew JD.
+Computer played 2C on Pile 3.
+Computer played AD on Pile 3.
+Computer drew a card.
+
+Pile 1: 7C
+Pile 2: 3C 2H AS
+Pile 3: 9H 8S 7H 6C 5D 4C 3D 2C AD
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S 3H 2S AH
+Pile 7: KS QD
+Pile 8: KD QS
+Computer player has 4 cards.
+Your hand:  JD TS TH
+Draw pile has 4 cards.
+Move> l jd 8
+
+You played JD on Pile 8.
+
+Pile 1: 7C
+Pile 2: 3C 2H AS
+Pile 3: 9H 8S 7H 6C 5D 4C 3D 2C AD
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S 3H 2S AH
+Pile 7: KS QD
+Pile 8: KD QS JD
+Computer player has 4 cards.
+Your hand:  TS TH
+Draw pile has 4 cards.
+Move> l ts 8
+
+You played TS on Pile 8.
+
+Pile 1: 7C
+Pile 2: 3C 2H AS
+Pile 3: 9H 8S 7H 6C 5D 4C 3D 2C AD
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S 3H 2S AH
+Pile 7: KS QD
+Pile 8: KD QS JD TS
+Computer player has 4 cards.
+Your hand:  TH
+Draw pile has 4 cards.
+Move> m 3 8
+
+You moved Pile 3 to Pile 8.
+
+Pile 1: 7C
+Pile 2: 3C 2H AS
+Pile 3:
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S 3H 2S AH
+Pile 7: KS QD
+Pile 8: KD QS JD TS 9H 8S 7H 6C 5D 4C 3D 2C AD
+Computer player has 4 cards.
+Your hand:  TH
+Draw pile has 4 cards.
+Move> l th 3
+
+You played TH on Pile 3.
+You won the round!
+Pile 1: 7C
+Pile 2: 3C 2H AS
+Pile 3: TH
+Pile 4: 7S 6H 5S 4D 3S 2D AC
+Pile 5: KC QH JS TD
+Pile 6: KH QC JH TC 9D 8C 7D 6S 5H 4S 3H 2S AH
+Pile 7: KS QD
+Pile 8: KD QS JD TS 9H 8S 7H 6C 5D 4C 3D 2C AD
+Computer player has 4 cards.
+Your hand:
+Draw pile has 4 cards.
+Computer got 4 penalty points from leftover cards.
+
+The computer has 4 penalty points.
+You have 0 penalty points.
+[press enter to continue]
+
+
+Preparing for new round.  Shuffling deck.
+You deal.
+Computer moved Pile 4 to Pile 1.
+Computer played 8S on Pile 1.
+Computer played QH on Pile 4.
+Computer drew a card.
+
+Pile 1: TC 9D 8S
+Pile 2: 6S
+Pile 3: 2H
+Pile 4: QH
+Pile 5:
+Pile 6:
+Pile 7:
+Pile 8:
+Computer player has 6 cards.
+Your hand:  KH TD 8D 6H 6C 5H AC
+Draw pile has many cards.
+Move> q
+
+Are you sure you want to quit? [yes/no]: yes
+Thanks for playing King's Corner.  Goodbye.
+$

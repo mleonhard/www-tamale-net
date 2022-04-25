@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Ideal Alarm Clock - tamale.net</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+<div class=page>
+
+<h1>Ideal Alarm Clock</h1>
+
+<p><a href="/">Home</a></p>
+
+<p>Written 2006-3-9</p>
+
+<p>Here are the features of my ideal alarm clock:</p>
+
+<ul>
+
+<li>LARGE time display.  It must be as wide as the front face of the device.  Automatic brightness control based on room light level, using a light sensor.  So when you turn out the room lights, the clock slowly dims over a period of 1 minute.  Turning on the lights causes the alarm to get bright instantly, to be readable in the bright room.  The manufacturer's logo would appear on the sides of the device, not on the front.  There would be no blinking items on the display.</li>
+
+<li>2 wheels for changing the time, one for the hour and the other for the minute.  These would be located on the top of the device.  The wheels would be aligned with their corresponding displays.  So the hour control would be on the left, lining up with the hours display.  Similarly, the minutes control wheel is on the right.  Rolling a wheel up, toward the back of the device, would cause the corresponding numbers to increment.  Rolling it the other way would cause them to decrement.  This would avoid the annoying mistake of incrementing minutes, missing the desired time, and having to cycle through 60 more minutes to get back to it.  Increasing the minutes past 59 would roll over the clock to the next hour.  Similarly for decreasing below 00.  The wheels would have a transparent flip up cover to prevent accidental changes.  The cover would be durable and easy to raise with one hand.  There would be no fragile hinges or springs.  "Change Time" would be written in big letters on the cover.</li>
+
+<li>A small alarm time display in a different color, under the main time display, on the right side.  It would be labeled with "Alarm" in big letters.</li>
+
+<li>2 wheels for changing the alarm time.  These would be located directly under the alarm time display.  The hours control would be right under the alarm hour.  The minutes control under the alarm minute.  The behavior would be identical to the time controls on the top of the device.  It must be easy to operate these wheels in the dark using only one hand.  The wheels would be recessed into the device, to prevent accidental changes.  </li>
+
+<li>A giant raised SNOOZE button covering the entire top front edge of the device.  Pressing the SNOOZE button while the alarm is sounding causes the alarm to immediately be quiet and then wait the chosen snooze duration before sounding again.  There is no limit on the number of snoozes.  Changing the alarm time would not cancel a snooze period.  If user changes the alarm time and the alarm goes off again, the current snooze would be replaced by the new snooze period.  A snooze may be canceled by pressing the SNOOZE button 5 times.  Turning off the alarm with the volume knob also cancels the snooze.</li>
+
+<li>Alarm volume knob.  Turning it all the way down turns off the alarm with a reassuring *click*.  The alarm display will go blank when the alarm is off.  Turning off the alarm also cancels a snooze.  The knob is raised about 1/2 inch so you can find it easily in the dark.  It protrudes from the right side of the device, next to the alarm time display.  Turning it clockwise increases the volume.</li>
+
+<li>Alarm volume test: Pressing the SNOOZE button when not in a snooze will cause the alarm to sound while the button is depressed.  This allows the user to check the volume before going to sleep.</li>
+
+<li>Alarm sound starts out silent and slowly gets louder.  It takes about 30 seconds to reach full intensity.  The full intensity is determined by the volume knob.</li>
+
+<li>Automatic alarm shutoff after about 15 minutes.  This prevents the situation where one's roommate's alarm beeps inside his locked room while he is out, for the entire day/week/winter break.</li>
+
+<li>Built in battery to remember the time when the device isn't getting power from the wall jack.  This should be replaceable and cheap, like a PC motherboard battery.  It should be clearly visible behind a transparent cover.  The most common battery type should be used.  If the battery is dead then a bright red light should blink from the battery case, clearly visible.  The user will desire to remove the battery to stop the blinking.  The removed battery may become lost before the user can take it to the store to buy a new one.  This is relieved in two ways:  The type of battery is printed clearly on the battery cover.  Additionally, the device has a holder under the cover for an extra battery and comes with an extra one installed.  It should be very easy to change the battery without using a tool, even for somebody with big stubby fingers.  The battery cover must be durable and nondetachable.  There should be no detachable parts in the device.</li>
+
+</ul>
+
+<p>Optional:</p>
+
+<ul>
+
+<li>24/12 hour modes.  A small switch located on the back of the device will switch the displays between 12-hour and 24-hour modes.  In 12-hour mode, a bright A or P appear to the right of the number minutes display.  This appears in the clock time and alarm time displays.  In 24-hour mode the displays range from 00:00, with leading zero, to 23:59.</li>
+
+<li>Tactile feedback on wheels.  The wheels will have some resistance to turning.  They will turn in discrete amounts, so the user can feel how many "amounts" the wheel has turned.  The wheel resists turning in pulses.  These will correspond to hours and to minutes.  The minutes wheel's pulses will be much smaller, so there will be more per revolution.  Thus it will be easy for a user to advance the alarm by 7 minutes by touch alone, without looking at the alarm time display.</li>
+
+<li>Single knob for setting time.  Another knob for setting alarm.  Turning the knob adjusts the minutes.  Knobs are easier to use than recessed wheels.  Light clicks could be useful to allow easy adjustment of a particular number of minutes using only tactile feedback.  Using knobs would decrease the complexity of the device.  The time knob could go on the back of the device.  Then the alarm time knob could go on the right side, next to the alarm time display.  The alarm volume/off knob could also go on the side, maybe above the alarm time knob.  Then the SNOOZE button is the only thing on top of the device.  It could be made very large, to cover the whole top. :)</li>
+
+<li>Small display of snooze duration in minutes, in a different color, under the main time display, on the left side.  One small wheel for changing the snooze duration.  This is the amount of time you get to sleep after hitting the SNOOZE button before the alarm goes off again.  This could be located right under the snooze duration display.  Rolling the wheel upward increases the time.  Rolling it downward decreases the time.  Rolling it below 1 turns off the snooze feature, ideally with a nice *click* that you can feel and hear.  When the snooze is off, the snooze duration display goes out and any snooze is canceled.  The snooze display goes out also when the alarm is turned off via the alarm volume knob.</li>
+
+<li>Several different tones.  A sliding switch on the back of the device would allow selection between many different tones.  The classic BEEP BEEP BEEP would be included as well as various chimes.</li>
+
+<li>Custom alarm sound via Flash memory.  A special USB flash drive would come with the alarm clocks.  The device would have a USB plug for the computer and then another plug for inserting into the alarm clock.  Open source software would facilitate converting audio from any source to the special raw format to be written to the flash drive.  This would keep down cost by minimizing the processing resources needed in the alarm clock.</li>
+
+<li>MP3 Player integration.  Drop in your iPod for charging.  Instead of beeping, the alarm starts up your iPod and unpauses/plays it.  The audio is played through the device's speakers and the volume is slowly increased over 30 seconds.  Versions could be made to support other MP3 players like Creative's MuVo and Nano.  The important thing is that the alarm clock knows nothing of the MP3 player's software.  All it has to do is boot up and unpause/play the thing.</li>
+
+<li>Nice fonts.  The displays show nice, unbroken, smooth curved numbers and letters.  This is in contrast to the ugly segmented LED displays.  Depending on the mechanism, the display might be readable in normal room light.  In this case the clock would turn off its illumination when sufficient light is incident on the face of the clock to make it easily readable.  It has to look good and be *very* easy to read.  The display mechanism may be mechanical, but it must be silent.  Slow, 1-2 second, transitions between clock times is ok.  But responses to turned knobs must occur almost instantaneously.</li>
+
+<li>Braille clock display.  Voice callout of time every 15 minutes.  Optionally a digital time sound consisting of beeps.  Audio feedback for wheels and switches.</li>
+
+<li>Rather than wheels, make the time display appear on a rolling wheel.  Then one can change the time by actually rotating the wheels with the fingers.  The clock time wheels would be very stiff, making it hard to accidentally move them.  The alarm display would be easier to move.</li>
+
+</ul>
+
+<p><a href="/">Home</a></p>
+<hr>
+<p>Copyright &copy; 1999-2012 Michael Leonhard</p>
+</div>
+</body>
+</html>

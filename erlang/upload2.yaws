@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<title>Upload</title>
+</head>
+<body>
+<erl>
+
+%%% Michael Leonhard (http://tamale.net/)
+%%% Based on upload.yaws from YAWS 1.57 by Claes Wikstrom
+
+-record(upload,			% represents state for a partially processed upload
+	{filename			% name of the file
+	,last				% indicates that the last part is being processed
+	,rlist				% reversed order list of binaries comprising file data
+	,data				% binary of file data
+	}).
+
+%%% Outputs a form, with any feedback from a previous request
+%%% returns Ehtml
+show_form(A, Feedback) -> {ehtml,
+	[	{form
+		,[{enctype,"multipart/form-data"},{action,"upload2.yaws"},{method,"post"}]
+		,	[{p,[],"Choose a file and click Upload."}
+			,{p,[],{input,[{type,"file"},{name,"file"}],[]}}
+			,{p,[],{input,[{type,"submit"},{value,"Upload"}],[]}}
+			]
+		}
+	,{p,[],Feedback}
+	]}.
+
+%%% Process POST data from client, state=#upload
+%%% returns Ehtml | {get_more, Continuation, NewState}
+handle_post(A) when is_record(A#arg.state,upload) ->
+	io:fwrite("upload.yaws:handle_post/2 State=~s~n", [upload_to_string(A#arg.state)]),
+	multipart(A, A#arg.state);
+handle_post(A) ->
+	io:fwrite("upload.yaws:handle_post/2 creating state~n"),
+	State = #upload{},
+	multipart(A, State).
+
+%%% Processes result of upload
+%%% returns Ehtml
+result_ehtml(A, {error,Reason}) when is_list(Reason) ->
+	io:fwrite("upload.yaws:result_ehtml/3 error Reason=~s~n", [Reason]),
+	show_form(A, Reason);
+result_ehtml(A, {upload,U}) when is_record(U,upload) ->
+	io:fwrite("upload.yaws:result_ehtml/3 upload U=~s~n", [upload_to_string(U)]),
+	ResultEhtml =
+		[{hr,[],[]}
+		,{p,[],"Upload Complete!"}
+		,{pre,[],f
+			("filename=~s data=<<~w bytes>></pre>~n"
+			,[U#upload.filename, size(U#upload.data)])}],
+	show_form(A, ResultEhtml).
+
+%%% Process part of a multi-part form post
+%%% returns Ehtml | {get_more, Continuation, NewState}
+multipart(A, State) when is_record(State,upload) ->
+	io:fwrite("upload.yaws:multipart/3 State=~s~n", [upload_to_string(State)]),
+	case yaws_api:parse_multipart_post(A) of
+	{cont, Cont, Part} ->
+		io:fwrite("upload.yaws:multipart/3 cont~n"),
+		case process_part(A, Part, State) of
+		{done, Result} ->
+			io:fwrite("upload.yaws:multipart/3 done~n"),
+			result_ehtml(A, Result);
+		{cont, NewState} ->
+			io:fwrite("upload.yaws:multipart/3 get_more NewState=~s~n", [upload_to_string(NewState)]),
+			{get_more, Cont, NewState}
+		end;
+	{result, Part} ->
+		io:fwrite("upload.yaws:multipart/3 result~n"),
+		case process_part(A, Part, State#upload{last=true}) of
+		{done, Result} ->
+			io:fwrite("upload.yaws:multipart/3 done~n"),
+			result_ehtml(A, Result);
+		{cont, _} ->
+			io:fwrite("upload.yaws:multipart/3 error~n"),
+			result_ehtml(A, {error, "Error During Upload"})
+		end;
+	[] -> result_ehtml(A, {error,"You must select a file to upload."})
+	end.
+
+%% Converts path into a safe htmlized filename, with directories removed
+%% returns non-empty String
+sanitize_filename(Input) ->
+	FilePath =
+		case Input of
+		List when is_list(List) -> List;
+		_ -> "unnamed"
+		end,
+	StripWindowsDirsFun = fun(L) -> lists:last(string:tokens(L,"\\")) end,
+	StripUnixDirsFun = fun(L) -> lists:last(string:tokens(L,"/")) end,
+	EmptyToUnnamedFun = fun(L) -> case L of [] -> "unnamed"; _-> L end end,
+	yaws_api:htmlize(
+	EmptyToUnnamedFun(
+	StripUnixDirsFun(
+	StripWindowsDirsFun(FilePath)))).
+
+%% Returns string representation of the upload record, suitable for printing to console
+%% returns String
+upload_to_string(Upload) when is_record(Upload,upload) ->
+	FileNameString = f("filename=~s",[Upload#upload.filename]),
+	RlistString =
+		case Upload#upload.rlist of
+		undefined -> " rlist=undefined";
+		List when is_list(List) ->
+			f(" rlist=~p bytes in ~p chunks",[iolist_size(List), length(List)])
+		end,
+	DataString =
+		case Upload#upload.data of
+		undefined -> " data=undefined";
+		Bin when is_binary(Bin) -> f(" data=<<~p bytes>>",[size(Bin)])
+		end,
+	lists:flatten([FileNameString, RlistString, DataString]).
+
+%%% Processes a part of the multipart post
+%%% returns {done,{upload,#upload}} | {done,{error,Reason}} | {cont,#upload}
+%%%
+%%% Process data_part and data identically
+process_part(A, [{part_body, Data}|Tail], State) ->
+	io:fwrite("upload.yaws:process_part/4 part_body~n"),
+    process_part(A, [{body, Data}|Tail], State);
+
+%%% Final part list has been processed
+process_part(_A, [], State) when State#upload.last==true,State#upload.filename /= undefined ->
+	io:fwrite("upload.yaws:process_part/4a State=~s~n", [upload_to_string(State)]),
+	Data = iolist_to_binary(lists:reverse(State#upload.rlist)),
+    {done, {upload, State#upload{rlist=undefined,data=Data}}};
+
+%%% Final part list has been processed but filename was not processed
+process_part(A, [], State) when State#upload.last==true ->
+	io:fwrite("upload.yaws:process_part/4b State=~s~n", [upload_to_string(State)]),
+    {done, {error, "Error: did not receive header with upload."}};
+
+%%% Part list was processed
+process_part(_A, [], State) ->
+	io:fwrite("upload.yaws:process_part/4c State=~s~n", [upload_to_string(State)]),
+	{cont, State};
+
+%%% Process header
+process_part(A, [{head, {"file", Opts}}|Tail], State ) ->
+	io:fwrite("upload.yaws:process_part/4d State=~s~n", [upload_to_string(State)]),
+	case lists:keysearch(filename, 1, Opts) of
+	{value, {_, UncheckedFileName}} ->
+		io:fwrite("upload.yaws:process_part/4d UncheckedFileName=~s~n", [UncheckedFileName]),
+		FileName = sanitize_filename(UncheckedFileName),
+		io:fwrite("upload.yaws:process_part/4d FileName=~s~n", [FileName]),
+		process_part(A, Tail, State#upload{filename=FileName,rlist=[]});
+	false ->
+		{done, {error, "Error: filename not found in header."}}
+	end;
+
+%%% Process data
+process_part(A, [{body, Data}|Tail], State) when State#upload.filename /= undefined ->
+	io:fwrite("upload.yaws:process_part/4e State=~s~n", [upload_to_string(State)]),
+	NewRList = [list_to_binary(Data) | State#upload.rlist],
+	io:fwrite("upload.yaws:process_part/4e data part=<<~w bytes>>~n", [length(Data)]),
+	process_part(A, Tail, State#upload{rlist=NewRList}).
+
+%%% Called by YAWS to generate content for the page
+%%% returns Ehtml | {get_more,Continuation,State}
+out(A) ->
+	case (A#arg.req)#http_request.method of
+	'GET' -> show_form(A, "");
+	'POST' -> handle_post(A)
+	end.
+</erl>
+
+</body>
+</html>
+

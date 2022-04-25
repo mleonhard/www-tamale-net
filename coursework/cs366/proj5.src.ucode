@@ -1,0 +1,266 @@
+// proj5.src.ucode (Project 5 Microcode Source)
+// Michael Leonhard (mleonhar)
+// CS366 Fall 2005, Professor Khokhar
+// TA: Mani Radhakrishnan
+// MythSim 3.1.1 on Windows XP SP2, Java SDK 1.5.0_04
+// 2005-11-29
+//
+// Status:
+//  This microcode instruction set implements all requirements of the
+//  assignment description.
+// 
+// Notes:
+//
+//   The assignment description specifies a DIV instruction which brings the 
+// divisor from register Rk.  In implementing the second part of the assignment,
+// the parity algorithm, it became apparent that the program could be simplified
+// if the divisor were specified as a constant.  Thus I added the DIVI
+// instruction which take the divisor as const4.
+//
+//   The assignment description specifies that the DIV lookup table should 
+// contain 64 entries each for divisors 2 and 4.  This supports dividends in the
+// range 0 through 63.  The parity algorithm specifies that N=64 and then
+// procedes to divide N by two.  This requires that the lookup table be expanded
+// by one, to 65 entries.  The register r4 is assumed to be initialized to the
+// location of the first byte of the table.  The accompanying MythAssembler will
+// produce MythSim memory files containing the proper 65 entry lookup table and
+// instructions to automatically initialize r4 to the proper address.
+//
+// Bugs found in Mythsim:
+//
+// The parser has a bug: if the memory file contains a comment with a colon, the
+// parser will crash with NumberFormatException.  This is likely a bug in
+// the grammar definition.  Comments should be ignored.  Everything from the
+// "//" characters to the "\n" should be completely ignored by the parser.
+// 
+// Similarly, beginning a line with a colon ":" symbol yields a
+// NumberFormatException.  One would hope to receive a syntax error.
+// 
+// Another bug: MythSim allows this ambiguous microcode instruction:
+// opcodeADDM.2: rk_sel, b_sel=6, alu_sel=ADD, r6_write, goto opcodeADDM.2;
+//            ^^^^^^  ^^^^^  rk_sel will silently take precedence over b_sel
+// 
+// Parsing of the microcode file is also strange.  It would be much better to
+// allow entire instructions to be grouped together.  The current parser
+// requires that the first instructions of all microcode programs be grouped
+// together at the front of the file.  Goto statements are then used to jump
+// to the remainders of the programs.  This is ugly.  The only needed solution
+// is to fix the evaluation of the switch statement to work as expected.
+//
+// Microcode instructions are allowed to span several lines.  This is helpful
+// for increasing readbility of complicated instructions.  Unfortunately,
+// comments are not allowed on the lines internal to the instruction.  Thus it
+// is not possible to comment each line of the instruction.  For example, the
+// following instruction yields a parsing error when loaded in MythSim:
+//
+//   // BNZ, if rj is not zero then branch
+//   opcode[21]: rj_sel, alu_sel=SUBA,     // rj - 1
+//        if c_out then goto branchconst4  // cout means rj>0 so branch
+//        else goto fetch0 endif;          // underflow means rj=0 so next
+//
+// MythSim should be fixed to completely ignore all text from "//" up to the
+// end of the line.  To work around this problem, one may use a program to strip
+// out the comments from one's microcode file before loading it in MythSim.  An
+// accompanying Python script, stripcomments.py, may be used for this.  It may
+// be invoked in this manner:
+//  python stripcomments.py proj5.src.ucode > proj5.ucode
+//
+// TESTING
+//   This microcode was tested with the parity algorithm implemented in
+// proj5.asm.
+//
+
+//////////////////////////////////////////////////////////////////////////////
+// Microcode Definitions
+//////////////////////////////////////////////////////////////////////////////
+
+// ========= FETCH =========
+// Fetch performs the following operations:
+// MAR <-- R7, R6 <-- R7
+// R7 <-- R6 + 1, IR0 <-- Mem[MAR]
+// MAR <-- R7, R6 <-- R7
+// R7 <-- R6 + 1, IR1 <-- Mem[MAR]
+// After the fetch, the IR holds the new instruction and R7 points to the
+// first byte of the next instruction.
+fetch0: a_sel=7, b_sel=7, alu_sel=AND, r6_write, mar_sel=LOAD;
+fetch1: a_sel=6, c_in, alu_sel=ADDA, r7_write, ir0_sel=LOAD, read, if wait then goto fetch1 endif;
+fetch2: a_sel=7, b_sel=7, alu_sel=AND, r6_write, mar_sel=LOAD;
+fetch3: a_sel=6, c_in, alu_sel=ADDA, r7_write, ir1_sel=LOAD, read, if wait then goto fetch3 endif;
+
+// =========OPCODES=========
+// 0) NOP
+// 1) LI: ri <- const8
+// 2) J: r7 <- r7 + rj
+// 3) ADD: ri <- rj + rk
+// 4) BE: if rj == rk then r7 <- r7 + 2*const4
+// 5) JI: r7 <- r7 + const8
+// 6) HALT
+// 7) LDM: ri <- Mem[rj + const4]
+// 8) SWM: rk -> Mem[rj + const4]
+// 9) ADDM: ri <- rj + Mem[rk + const4]
+//10) SUBM: ri <- rj - Mem[rk + const4]
+//11) ADDI: ri <- rj + const4
+//12) MOVE: ri <- rj
+//13) DIV: ri <- rj / rk (the value in rk may be 2 or 4, assumes r4=TableAddress)
+//14) DIVI: ri <- rj / const4 (supports divion by 2 or 4, assumes r4=TableAddress)
+//15) DIVT: r4 <- const8
+//16) LDI: ri <- Mem[const8]
+//17) STI: rk -> Mem[const4]
+//18) SUBI: ri <- rj - const4
+//19) BZ: if rj == 0 then r7 <- r7 + 2*const4
+//20) AND: ri <- rj + rk
+//21) BNZ: if rj != 0 then r7 <- r7 + 2*const4
+
+
+switch:	   goto opcode[IR_OPCODE];
+//NOP, next
+opcode[0]: goto fetch0;
+//LOAD_IMM, ri <- const8, next
+opcode[1]: ri_sel,		result_sel=IR_CONST8,					goto fetch0;
+//J, r7 <- rj, next
+opcode[2]: r7_write,		rj_sel,  			alu_sel=ADDA,		goto fetch0;
+//ADD, ri <- rj + rk, next
+opcode[3]: ri_sel,		rj_sel,	rk_sel,		alu_sel=ADD, 		goto fetch0;
+//BE, r6 <- rj - rk, goto BE.1
+opcode[4]: r6_write,		rj_sel, 	rk_sel, 		alu_sel=SUB,c_in,	goto opcodeBE.1;
+//JI, r6 <- const8, goto JI.1
+opcode[5]: r6_write,		result_sel=IR_CONST8, 					goto opcodeJI.1;
+//HALT, goto HALT
+opcode[6]: 														goto opcode[6];
+//LDM, r6 <- const4, goto LDM.1
+opcode[7]: r6_write,		result_sel=IR_CONST4, 					goto opcodeLDM.1;
+//SWM, r6 <- const4, goto SWM.1
+opcode[8]: r6_write,		result_sel=IR_CONST4,					goto opcodeSWM.1;
+//ADDM, r6 <- const4, goto ADDM.1
+opcode[9]: r6_write,		result_sel=IR_CONST4,					goto opcodeADDM.1;
+//SUBM, r6 <- const4, goto SUBM.1
+opcode[10]: r6_write,	result_sel=IR_CONST4,					goto opcodeSUBM.1;
+//ADDI, r6 <- const4, goto ADDI.1
+opcode[11]: r6_write,	result_sel=IR_CONST4, 					goto opcodeADDI.1;
+//MOVE, ri <- rj, next
+opcode[12]: ri_sel,		rj_sel, 				alu_sel=ADDA, 		goto fetch0;
+// DIV, r6 <- 0, goto DIV.1
+opcode[13]: r6_write,	a_sel=6,	b_sel=6,		alu_sel=XOR,			goto opcodeDIV.1;
+//DIVI, r6 <- const4, goto DIV.2
+opcode[14]: r6_write,	result_sel=IR_CONST4, 					goto opcodeDIV.2;
+//DIVT, r4 <- const8, next
+opcode[15]: r4_write,	result_sel=IR_CONST8, 					goto fetch0;
+//LDI, r6 <- const8, goto memr6readri
+opcode[16]: r6_write,	result_sel=IR_CONST8, 					goto memr6readri;
+//STI, r6 <- const4, goto rkstorememr6
+opcode[17]: r6_write,	result_sel=IR_CONST4, 					goto rkstorememr6;
+//SUBI, r6 <- const4, goto SUBI.1
+opcode[18]: r6_write,	result_sel=IR_CONST4, 					goto opcodeSUBI.1;
+// BZ, if rj is zero then branch.  rj - 1
+opcode[19]: 				rj_sel, 				alu_sel=SUBA,
+	if c_out then goto fetch0
+	else goto branchconst4 endif;
+//AND, ri <- rj & rk, next
+opcode[20]: ri_sel,		rj_sel, 	rk_sel, 	 	alu_sel=AND, 		goto fetch0;
+// BNZ, if rj is not zero then branch
+opcode[21]: 				rj_sel, 				alu_sel=SUBA, // rj - 1
+	if c_out then goto branchconst4 // cout means rj>0 so branch
+	else goto fetch0 endif;// underflow means rj=0 so next
+
+//SUBI, ri <- rj - r6@const4, next
+opcodeSUBI.1: ri_sel,	rj_sel,	b_sel=6, 	alu_sel=SUB,c_in, 	goto fetch0;
+
+// BE, if r6@rj-rk is zero then branch.
+opcodeBE.1: 				a_sel=6,				alu_sel=SUBA, // r6 - 1
+	if c_out then goto fetch0 // cout means r6>0 so next
+	else goto branchconst4 endif; // underflow means r6=0 so branch
+
+// JI, r7 <- r7 + r6@const8, next
+opcodeJI.1: r7_write,	a_sel=7,	b_sel=6,		alu_sel=ADD, 		goto fetch0; 
+
+//LDM, r6 <- rj + r6@const4, goto memr6readri
+opcodeLDM.1: r6_write,	rj_sel, b_sel=6, 	alu_sel=ADD, 		goto memr6readri;
+
+//SWM, r6 = rj + r6@const4, goto rkstorememr6
+opcodeSWM.1: r6_write,	rj_sel,	b_sel=6,		alu_sel=ADD,			goto rkstorememr6;
+
+// ADDM, ri <- rj + Mem[rk +r6@const4], next
+opcodeADDM.1:
+			r6_write,	a_sel=6, rk_sel, 	alu_sel=ADD; // r6 <- r6 + rk
+			mar_sel=LOAD,a_sel=6, b_sel=6, 	alu_sel=AND; // Addr = r6 & r6
+opcodeADDM.2:
+			mdr_sel=LOAD_MEM,				read, // read memory
+			if wait then goto opcodeADDM.2 endif; // wait for memory
+			r6_write,	result_sel=MDR; // r6 <- Mem[Addr]
+			ri_sel,		rj_sel,	b_sel=6,		alu_sel=ADD, 		goto fetch0; // ri <- rj + r6
+
+// SUBM, ri <- rj - Mem[rk + r6@const4], next
+opcodeSUBM.1:
+			r6_write,	a_sel=6,	rk_sel, 		alu_sel=ADD; // r6 < r6 + rk
+			mar_sel=LOAD,a_sel=6,b_sel=6, 	alu_sel=AND, ; // Addr = r6 & r6
+opcodeSUBM.2:
+			mdr_sel=LOAD_MEM,				read, // read memory 
+			if wait then goto opcodeSUBM.2 endif; // wait for memory
+			r6_write,	result_sel=MDR;	// r6 <- Mem[Addr]
+			ri_sel,		rj_sel,	b_sel=6,		alu_sel=SUB,c_in,	goto fetch0; // ri <- rj - r6
+
+// ADDI, ri <- rj + r6, next
+opcodeADDI.1: ri_sel,	rj_sel,	b_sel=6,		alu_sel=ADD,			goto fetch0;
+
+// DIV & DIVI, ri <- rj / divisor, if r6@divisor != 2 or 4 then halt, 
+opcodeDIV.1: // r6 <- r6=0 | rk
+			r6_write,	a_sel=6,	rk_sel,		alu_sel=OR;
+opcodeDIV.2: // if r6 is zero then halt, r--
+			r6_write,	a_sel=6,				alu_sel=SUBA, // r6 <- r6 - 1
+			if c_out then goto opcodeDIV.3 // cout means r6>0 so continue
+			else goto opcode[6] endif; // underflow means r6=0 so halt
+opcodeDIV.3: // if r6 is zero then halt, r--
+			r6_write,	a_sel=6,				alu_sel=SUBA, // r6 <- r6 - 1
+			if c_out then goto opcodeDIV.4 // cout means r6>0 so continue
+			else goto opcode[6] endif; // underflow means r6=0 so halt
+opcodeDIV.4: // if r6 is zero (means divisor=2) then goto LOOKUP, otherwise continue
+						a_sel=6,				alu_sel=SUBA, // r6 - 1
+			if c_out then goto opcodeDIV.5 // cout means r6>0 so continue
+			else goto opcodeDIV.LOOKUP endif; // underflow means r6=0 so goto LOOKUP
+opcodeDIV.5: // if r6 is zero then halt, r--
+			r6_write,	a_sel=6,				alu_sel=SUBA, // r6 <- r6 - 1
+			if c_out then goto opcodeDIV.6 // cout means r6>0 so continue
+			else goto opcode[6] endif; // underflow means r6=0 so halt
+opcodeDIV.6: // if r6 is zero then halt, r--
+			r6_write,	a_sel=6,				alu_sel=SUBA, // r6 <- r6 - 1
+			if c_out then goto opcodeDIV.7 // cout means r6>0 so continue
+			else goto opcode[6] endif; // underflow means r6=0 so halt
+opcodeDIV.7: // if r6 is zero (means divisor=4) then goto continue, otherwise halt
+						a_sel=6,				alu_sel=SUBA, // r6 - 1
+			if c_out then goto opcode[6] // cout means r6>0 so halt
+			else goto opcodeDIV.8 endif; // underflow means r6=0 so continue
+opcodeDIV.8:  // r6 <-- 1
+			r6_write,	a_sel=6,				alu_sel=ADDA,c_in; // r6 <-- r6=0 + 1
+opcodeDIV.LOOKUP: // r6 <-- r6 + r4 + rj + rj, ri <-- Mem[r6]
+			r6_write,	a_sel=6,	b_sel=4,		alu_sel=ADD; // r6 <-- r6 + r4
+			r6_write,	rj_sel,	b_sel=6,		alu_sel=ADD; // r6 <-- r6 + rj
+			r6_write,	rj_sel,	b_sel=6,		alu_sel=ADD; // r6 <-- r6 + rj
+			goto memr6readri; // ri <-- Mem[r6], next
+
+// Utility routines ///////////////////////////////////////////////////////////
+
+// jump 2*const4 bytes (forward or backward)
+branchconst4:
+			r6_write,	result_sel=IR_CONST4; // r6 <- const4
+			r6_write,	a_sel=6,	b_sel=6,		alu_sel=ADD; // r6 <- r6 + r6
+			r7_write, 	a_sel=7,	b_sel=6,		alu_sel=ADD, // r7 <- r7 + r6
+			goto fetch0; // next
+
+// read memory from address r6, store in ri
+memr6readri: mar_sel=LOAD,a_sel=6,b_sel=6, 	alu_sel=AND; // Addr = r6&r6
+memread:
+			mdr_sel=LOAD_MEM,				read, // read
+			if wait then goto memread endif; // wait for memory
+			ri_sel,		result_sel=MDR, // ri <- Mem[Addr]
+			goto fetch0;	 // next
+
+// store data from rk into address r6
+rkstorememr6:
+			mar_sel=LOAD,a_sel=6,b_sel=6,	alu_sel=AND; // Addr = r6&r6
+			r5_write,	a_sel=5,	b_sel=5,		alu_sel=XOR; // r5 <- 0
+			mdr_sel=LOAD_ALU,a_sel=5,rk_sel,	alu_sel=OR; // Mem[Addr] <- rk
+memwrite:	write, // write
+			if wait then goto memwrite // wait for memory
+			else goto fetch0 endif; // next
+
+// end of proj5.src.ucode

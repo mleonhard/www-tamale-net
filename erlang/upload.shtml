@@ -1,0 +1,298 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Yaws Uploads - tamale.net</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+<div class=page>
+
+<h1>How to process large uploads with Yaws</h1>
+<p><a href="/">Home</a></p>
+
+<p>Updated 2005-11-26</p>
+<p>
+  This page assumes a working knowledge of
+  <a href="http://www.erlang.org/">Erlang</a> and basic knowledge of 
+  <a href="http://yaws.hyber.org/">Yaws</a>
+  and <a href="http://yaws.hyber.org/simple.yaws">.yaws scripts</a>.
+  </p>
+
+<h2>The Form</h2>
+<p>
+  First write a .yaws script that returns an HTML form.
+  The following Ehtml will do nicely:
+  </p>
+<pre>
+{ehtml,
+    {form
+    ,   [{enctype,"multipart/form-data"}
+        ,{action,"upload2.yaws"}
+        ,{method,"post"}]
+    ,   [{p,[],"Choose a file and click Upload."}
+        ,{p,[],{input,[{type,"file"},{name,"file"}],[]}}
+        ,{p,[],{input,[{type,"submit"},{value,"Upload"}],[]}}
+        ]}}
+</pre>
+
+<p>Please note:</p>
+<ul>
+  <li>
+    The form's encoding type is &quot;multipart/form-data&quot;
+    </li>
+  <li>
+    The action points to the .yaws file that will process the upload
+    </li>
+  <li>
+    The method is POST.  This is necessary because the uploaded file is
+    delivered by the browser in the body of the HTTP request.  A GET style
+    request has only headers and no body.
+    </li>
+  </ul>
+
+<h2>Configure Yaws</h2>
+
+<p>
+  In the default configuration, Yaws will receive the uploaded file into a
+  list and deliver it at once to the .yaws script.  Dealing with large
+  lists is very memory inefficient.  Uploading a 4MB file can cause Yaws to
+  consume >100MB of RAM.
+  </p>
+
+<p>
+  The solution is to customize the configuration with the <em>partial_post_size</em>
+  option.  This option causes Yaws to deliver the incoming file to 
+  the <em>out/1</em> function in pieces, one at a time.
+  I am using <em>partial_post_size=65536</em> for my application.
+  </p>
+
+<h2>Efficient Processing</h2>
+
+<p>
+  The <a href="http://yaws.hyber.org/upload0.yaws">example</a> on the
+  Yaws website shows how to save the upload to a file on the web server.
+  One may wish to assemble the file in memory rather than writing it 
+  directly to disk.  This requires efficient processing of the file parts
+  as they are delievered by Yaws to the <em>out/1</em> function.
+  </p>
+
+<p>
+  It is imperative that the file data be stored in binaries.  Thus,
+  each list delivered to <em>out/1</em> must be converted to a binary.
+  Because of the way binaries are allocated in memory, it is
+  inefficient to accumulate the data in one binary.  It is better to
+  accumulate the binaries in a list.  After all parts of the upload have
+  been received, use the Erlang built-in function iolist_to_binary/1 to
+  convert the list of binaries into a single binary.
+  </p>
+
+<h2>One Caveat</h2>
+
+<p>
+  Processing of uploads is done with the <em>yaws_api:parse_multipart_post/1</em>
+  function.  The .yaws script <b>must call <em>yaws_api:parse_multipart_post/1</em>
+  from the first <em>out/1</em> function</b>.  Uploads will intermittently
+  fail if the script contains two
+  &lt;erl&gt;out(Arg) -&gt; &hellip; &lt;/erl&gt; sections and 
+  upload processing is performed in the second one.  The uploaded file
+  will transfer from the web browser, but Yaws will not transfer the final
+  chunk to the script, so the upload will freeze.  The workaround is to
+  make sure that upload processing is performed in the first <em>out/1</em>
+  function in your .yaws script.
+  </p>
+
+<h2>Example Script</h2>
+
+<p>
+  The script below is based on upload.yaws from Yaws 1.57.
+  The tricky parts are <em>multipart/2</em> and <em>process_part/3</em>.
+  You can downlaod it as <a href="upload2.yaws">upload2.yaws</a>.  It is
+  provided under the same license as Yaws.
+  </p>
+
+<hr>
+<pre>
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot;
+   &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; 
+charset=iso-8859-1&quot;/&gt;
+&lt;title&gt;Upload&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;erl&gt;
+
+%%% Michael Leonhard (http://tamale.net/)
+%%% Based on upload.yaws from YAWS 1.57 by Claes Wikstrom
+
+-record(upload,          % represents state for a partially processed upload
+    {filename            % name of the file
+    ,last                % indicates that the last part is being processed
+    ,rlist               % reversed order list of binaries comprising file data
+    ,data                % binary of file data
+    }).
+
+%%% Outputs a form, with any feedback from a previous request
+%%% returns Ehtml
+show_form(A, Feedback) -&gt; {ehtml,
+    [   {form
+        ,[{enctype,&quot;multipart/form-data&quot;},{action,&quot;upload2.yaws&quot;},{method,&quot;post&quot;}]
+        ,   [{p,[],&quot;Choose a file and click Upload.&quot;}
+            ,{p,[],{input,[{type,&quot;file&quot;},{name,&quot;file&quot;}],[]}}
+            ,{p,[],{input,[{type,&quot;submit&quot;},{value,&quot;Upload&quot;}],[]}}
+            ]
+        }
+    ,{p,[],Feedback}
+    ]}.
+
+%%% Process POST data from client, state=#upload
+%%% returns Ehtml | {get_more, Continuation, NewState}
+handle_post(A) when is_record(A#arg.state,upload) -&gt;
+    io:fwrite(&quot;upload.yaws:handle_post/2 State=~s~n&quot;, [upload_to_string(A#arg.state)]),
+    multipart(A, A#arg.state);
+handle_post(A) -&gt;
+    io:fwrite(&quot;upload.yaws:handle_post/2 creating state~n&quot;),
+    State = #upload{},
+    multipart(A, State).
+
+%%% Processes result of upload
+%%% returns Ehtml
+result_ehtml(A, {error,Reason}) when is_list(Reason) -&gt;
+    io:fwrite(&quot;upload.yaws:result_ehtml/3 error Reason=~s~n&quot;, [Reason]),
+    show_form(A, Reason);
+result_ehtml(A, {upload,U}) when is_record(U,upload) -&gt;
+    io:fwrite(&quot;upload.yaws:result_ehtml/3 upload U=~s~n&quot;, [upload_to_string(U)]),
+    ResultEhtml =
+        [{hr,[],[]}
+        ,{p,[],&quot;Upload Complete!&quot;}
+        ,{pre,[],f
+            (&quot;filename=~s data=&lt;&lt;~w bytes&gt;&gt;&lt;/pre&gt;~n&quot;
+            ,[U#upload.filename, size(U#upload.data)])}],
+    show_form(A, ResultEhtml).
+
+%%% Process part of a multi-part form post
+%%% returns Ehtml | {get_more, Continuation, NewState}
+multipart(A, State) when is_record(State,upload) -&gt;
+    io:fwrite(&quot;upload.yaws:multipart/3 State=~s~n&quot;, [upload_to_string(State)]),
+    case yaws_api:parse_multipart_post(A) of
+    {cont, Cont, Part} -&gt;
+        io:fwrite(&quot;upload.yaws:multipart/3 cont~n&quot;),
+        case process_part(A, Part, State) of
+        {done, Result} -&gt;
+            io:fwrite(&quot;upload.yaws:multipart/3 done~n&quot;),
+            result_ehtml(A, Result);
+        {cont, NewState} -&gt;
+            io:fwrite(&quot;upload.yaws:multipart/3 get_more NewState=~s~n&quot;, [upload_to_string(NewState)]),
+            {get_more, Cont, NewState}
+        end;
+    {result, Part} -&gt;
+        io:fwrite(&quot;upload.yaws:multipart/3 result~n&quot;),
+        case process_part(A, Part, State#upload{last=true}) of
+        {done, Result} -&gt;
+            io:fwrite(&quot;upload.yaws:multipart/3 done~n&quot;),
+            result_ehtml(A, Result);
+        {cont, _} -&gt;
+            io:fwrite(&quot;upload.yaws:multipart/3 error~n&quot;),
+            result_ehtml(A, {error, &quot;Error During Upload&quot;})
+        end;
+    [] -&gt; result_ehtml(A, {error,&quot;You must select a file to upload.&quot;})
+    end.
+
+%% Converts path into a safe htmlized filename, with directories removed
+%% returns non-empty String
+sanitize_filename(Input) -&gt;
+    FilePath =
+        case Input of
+        List when is_list(List) -&gt; List;
+        _ -&gt; &quot;unnamed&quot;
+        end,
+    StripWindowsDirsFun = fun(L) -&gt; lists:last(string:tokens(L,&quot;\\&quot;)) end,
+    StripUnixDirsFun = fun(L) -&gt; lists:last(string:tokens(L,&quot;/&quot;)) end,
+    EmptyToUnnamedFun = fun(L) -&gt; case L of [] -&gt; &quot;unnamed&quot;; _-&gt; L end end,
+    yaws_api:htmlize(
+    EmptyToUnnamedFun(
+    StripUnixDirsFun(
+    StripWindowsDirsFun(FilePath)))).
+
+%% Returns string representation of the upload record, suitable for printing to console
+%% returns String
+upload_to_string(Upload) when is_record(Upload,upload) -&gt;
+    FileNameString = f(&quot;filename=~s&quot;,[Upload#upload.filename]),
+    RlistString =
+        case Upload#upload.rlist of
+        undefined -&gt; &quot; rlist=undefined&quot;;
+        List when is_list(List) -&gt;
+            f(&quot; rlist=~p bytes in ~p chunks&quot;,[iolist_size(List), length(List)])
+        end,
+    DataString =
+        case Upload#upload.data of
+        undefined -&gt; &quot; data=undefined&quot;;
+        Bin when is_binary(Bin) -&gt; f(&quot; data=&lt;&lt;~p bytes&gt;&gt;&quot;,[size(Bin)])
+        end,
+    lists:flatten([FileNameString, RlistString, DataString]).
+
+%%% Processes a part of the multipart post
+%%% returns {done,{upload,#upload}} | {done,{error,Reason}} | {cont,#upload}
+%%%
+%%% Process data_part and data identically
+process_part(A, [{part_body, Data}|Tail], State) -&gt;
+    io:fwrite(&quot;upload.yaws:process_part/4 part_body~n&quot;),
+    process_part(A, [{body, Data}|Tail], State);
+
+%%% Final part list has been processed
+process_part(_A, [], State) when State#upload.last==true,State#upload.filename /= undefined -&gt;
+    io:fwrite(&quot;upload.yaws:process_part/4a State=~s~n&quot;, [upload_to_string(State)]),
+    Data = iolist_to_binary(lists:reverse(State#upload.rlist)),
+    {done, {upload, State#upload{rlist=undefined,data=Data}}};
+
+%%% Final part list has been processed but filename was not processed
+process_part(A, [], State) when State#upload.last==true -&gt;
+    io:fwrite(&quot;upload.yaws:process_part/4b State=~s~n&quot;, [upload_to_string(State)]),
+    {done, {error, &quot;Error: did not receive header with upload.&quot;}};
+
+%%% Part list was processed
+process_part(_A, [], State) -&gt;
+    io:fwrite(&quot;upload.yaws:process_part/4c State=~s~n&quot;, [upload_to_string(State)]),
+    {cont, State};
+
+%%% Process header
+process_part(A, [{head, {&quot;file&quot;, Opts}}|Tail], State ) -&gt;
+    io:fwrite(&quot;upload.yaws:process_part/4d State=~s~n&quot;, [upload_to_string(State)]),
+    case lists:keysearch(filename, 1, Opts) of
+    {value, {_, UncheckedFileName}} -&gt;
+        io:fwrite(&quot;upload.yaws:process_part/4d UncheckedFileName=~s~n&quot;, [UncheckedFileName]),
+        FileName = sanitize_filename(UncheckedFileName),
+        io:fwrite(&quot;upload.yaws:process_part/4d FileName=~s~n&quot;, [FileName]),
+        process_part(A, Tail, State#upload{filename=FileName,rlist=[]});
+    false -&gt;
+        {done, {error, &quot;Error: filename not found in header.&quot;}}
+    end;
+
+%%% Process data
+process_part(A, [{body, Data}|Tail], State) when State#upload.filename /= undefined -&gt;
+    io:fwrite(&quot;upload.yaws:process_part/4e State=~s~n&quot;, [upload_to_string(State)]),
+    NewRList = [list_to_binary(Data) | State#upload.rlist],
+    io:fwrite(&quot;upload.yaws:process_part/4e data part=&lt;&lt;~w bytes&gt;&gt;~n&quot;, [length(Data)]),
+    process_part(A, Tail, State#upload{rlist=NewRList}).
+
+%%% Called by YAWS to generate content for the page
+%%% returns Ehtml | {get_more,Continuation,State}
+out(A) -&gt;
+    case (A#arg.req)#http_request.method of
+    'GET' -&gt; show_form(A, &quot;&quot;);
+    'POST' -&gt; handle_post(A)
+    end.
+&lt;/erl&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p><a href="/">Home</a></p>
+<hr>
+<p>Copyright &copy; 1999-2012 Michael Leonhard</p>
+</div>
+</body>
+</html>

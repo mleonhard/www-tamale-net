@@ -1,0 +1,447 @@
+<html><head><title>CS 340 - MP 4 - Sliding Block Puzzles</title></head>
+<body>
+<h1>CS 340 - Software Design</h1>
+<h2>Machine Problem 4, Fall 2005</h2>
+<h2>Sliding Block Puzzles</h2>
+<h3>Due: Thursday, November 3, 2005 at 11:59 pm</h3>
+<p>
+A sliding block puzzle consists of a number of pieces that
+fit into a confined area.  The goal is to move one of the 
+pieces to a specific position.  This piece will be called
+the "goal piece".  The goal can only be acheived
+by moving all of the pieces is a certain specified order
+of moves.  Each piece may be restricted in the direction 
+that it can move.
+</p><p>
+Consider the following puzzle:
+</p><p>
+<table border="5" cellspacing="5">
+<tbody><tr><td align="center" height="50" width="50">1</td><td align="center" width="50">2
+	</td><td width="50"></td><td width="50">
+</td></tr><tr><td align="center" width="50">3</td><td align="center" width="50">
+	</td><td colspan="2" align="center" height="50" width="100">4
+</td></tr><tr><td colspan="2" align="center" height="50" width="100">Z
+	</td><td rowspan="2" align="center" width="50">5</td><td width="50">
+</td></tr><tr><td colspan="2" align="center" height="50" width="100">6</td><td align="center" width="50">7
+</td></tr></tbody></table>
+</p><p>
+The puzzle contains 8 pieces.  The piece labeled "Z" is the "goal piece".
+This piece must be moved to the right hand edge of the puzzle.  In this
+puzzle all pieces can move any direction we wish (left/right or 
+up/down).  One solution is to move piece 4 left one space, then
+move piece 7 up 3 spaces and left 1 space, then move piece 5 right
+one space then up 2 spaces, then finally move piece Z right 2 spaces.
+The result looks like this:
+</p><p>
+
+<table border="5" cellspacing="5">
+<tbody><tr><td align="center" height="50" width="50">1</td><td align="center" width="50">2
+	</td><td align="center" width="50">7</td><td rowspan="2" align="center" width="50">5
+</td></tr><tr><td align="center" width="50">3
+	</td><td colspan="2" align="center" height="50" width="100">4
+</td></tr><tr><td width="50"></td><td width="50"></td><td colspan="2" align="center" height="50" width="100">Z
+</td></tr><tr><td colspan="2" align="center" height="50" width="100">6</td><td align="center" width="50">
+	</td><td width="50">
+</td></tr></tbody></table>
+</p><p>
+Your program is to find the shortest solution for these types
+of puzzles.  The solution will always have the goal piece move
+to the right hand side of the puzzle grid (i.e. once the goal
+piece moves into the last column).
+Your program is take a command line argument that
+will contain the name of a data file containing the needed 
+information about the puzzle.  The output of the puzzle will
+be a sequences of moves that give the shortest solutions.
+</p><p>
+The solution is to be given as an ordered list of moves.
+Each move is to show the Piece moved, the direction (up,
+down, left or right) and the number of spaces moved in that
+direction.  The solution for the above puzzle is as follows:
+</p><p>
+<table>
+<tbody><tr><td>1.</td><td>Piece 4</td><td>left</td><td>1 space
+</td></tr><tr><td>2.</td><td>Piece 7</td><td>up</td><td>3 spaces
+</td></tr><tr><td>3.</td><td>Piece 7</td><td>left</td><td>1 space
+</td></tr><tr><td>4.</td><td>Piece 5</td><td>right</td><td>1 space
+</td></tr><tr><td>5.</td><td>Piece 5</td><td>up</td><td>2 space
+</td></tr><tr><td>6.</td><td>Piece Z</td><td>right</td><td>2 space
+</td></tr></tbody></table>
+</p><p>
+The shortest solution will have the fewest number of moves.  Note
+that there could be multiple shortest solutions for a puzzle.
+Finding any one of these shortest solutions is good enough for
+this programming assignment.  The above solution could have 
+reversed moves 3 &amp; 4 and still have been the shortest solution.
+Your program is to treat the following as 1 move:
+</p><p>
+<table>
+<tbody><tr><td>2.</td><td>Piece 7</td><td>up</td><td>3 spaces
+</td></tr></tbody></table>
+</p><p>
+while the following is considered 3 moves:
+</p><p>
+<table>
+<tbody><tr><td>2.</td><td>Piece 7</td><td>up</td><td>1 space
+</td></tr><tr><td>3.</td><td>Piece 7</td><td>up</td><td>1 space
+</td></tr><tr><td>4.</td><td>Piece 7</td><td>up</td><td>1 space
+</td></tr></tbody></table>
+</p><p>
+The input for a puzzle will always come from a file.  
+</p><ul>
+<li>The first
+line of the file will contain 2 integers, the number of rows and
+the number of columns of the puzzle "grid".  If either of these values
+is zero or less, print an appropriate error message and end the
+program.  These values will be separated by one or more
+white space characters.  The puzzle will always use a rectangular
+grid.
+</li><li>The second line of the file will contain the starting position
+of the goal piece.  
+</li><li>The remaining lines of the file will contain the starting position
+of the other pieces in the puzzle.
+</li><li>Once the end of the file is read, then all of the pieces have
+been read in.
+</li></ul>
+Each piece will always have a rectangular shape (while such puzzles
+with non-rectangular shape do exist, it adds a complexity we don't
+need to deal with here).
+Each piece's starting position is given by 4
+integer values and one character value.  These values will be 
+separated by one or more white space characters.  
+<ul>
+<li>The first integer will be the starting row position.
+</li><li>The second integer will be the starting column position.
+</li><li>The third integer will be the width in columns.
+</li><li>The fourth integer will be the height in rows.
+</li><li>The character value will specify the direction of movement
+the piece can have.  This character can be either an "h" for
+horizontal movement (left or right), a "v" for vertical
+movement (up or down), or a "b" for both horizontal and
+vertical movement.
+</li></ul>
+<p>
+If a piece would fall outside of the puzzle grid, have an invalid
+direction of movement, or overlap with another piece, an appropriate
+error message should be printed and the piece should be discarded
+from the puzzle (i.e. don't quit the program).  If the goal piece
+is listed incorrectly, the first correctly listed piece becomes the
+goal piece.  The upper left corner of the grid has row = 1 and
+column = 1.  The input for the above puzzle would be as follows:
+</p><pre>	4  4
+	3  1  2  1  b
+	1  1  1  1  b
+	1  2  1  1  b
+	2  1  1  1  b
+	2  3  2  1  b
+	3  3  1  2  b
+	4  1  2  1  b
+	4  4  1  1  b
+</pre>
+Note that the names of the pieces are not specied in the input file.
+The goal piece will always have the name of "Z".  The next nine
+pieces will have the names from "1" to "9".  The next 26 pieces
+will be given names using the lower case letters from "a" to "z".
+The next 25 pieces will be given names using the upper case letters
+from "A" to "Y" (since "Z" is already in use).  If the file has
+more than 61 pieces, come up with some additional naming scheme.  You
+can assume a puzzle will have less than 128 pieces.
+The actual file is <a href="http://www.cs.uic.edu/%7Ei340/mp4a.data">here in the file "mp4a.data"</a>.
+Other data files are:
+<ul>
+<li><a href="http://www.cs.uic.edu/%7Ei340/mp4a.data">mp4a.data</a> (The one listed above)
+</li><li><a href="http://www.cs.uic.edu/%7Ei340/mp4b.data">mp4b.data</a> 
+</li><li><a href="http://www.cs.uic.edu/%7Ei340/mp4c.data">mp4c.data</a> This one has no solution.
+</li><li><a href="http://www.cs.uic.edu/%7Ei340/mp4d.data">mp4d.data</a> 
+</li><li><a href="http://www.cs.uic.edu/%7Ei340/mp4e.data">mp4e.data</a> 
+</li><li><a href="http://www.cs.uic.edu/%7Ei340/mp4f.data">mp4f.data</a> 
+</li><li><a href="http://www.cs.uic.edu/%7Ei340/mp4g.data">mp4g.data</a> Error in input
+</li><li><a href="http://www.cs.uic.edu/%7Ei340/mp4h.data">mp4h.data</a> Error in input
+</li><li><a href="http://www.cs.uic.edu/%7Ei340/mp4i.data">mp4i.data</a> Error in input
+</li><li><a href="http://www.cs.uic.edu/%7Ei340/mp4j.data">mp4j.data</a> Error in input
+</li><li><a href="http://www.cs.uic.edu/%7Ei340/mp4k.data">mp4k.data</a> A 3 piece puzzle
+</li></ul>
+<p>
+It is possible that a puzzle may have no solution.
+Your output from the program should be written to standard output
+and should consist of four parts:
+</p><ol>
+<li>Any error messages generated by invalid input.<p>
+</p></li><li>A listing of the grid as the start of the puzzle.  This 
+can be a simple ASCII graphic as shown below:
+<pre>******
+*12  *
+*3 44*
+*ZZ5 *
+*6657*
+******
+</pre>
+
+Perhaps using periods instead of spaces makes this a bit more readable:
+<pre>******
+*12..*
+*3.44*
+*ZZ5.*
+*6657*
+******
+</pre>
+Of course, this grid is less readable if the grid so large that it
+causes line wrap (but this is not the programmer's problem).
+<p>
+</p></li><li> Then list out the moves that solve the puzzle or a message
+stating the puzzle is not solvable.<p>
+</p></li><li>A list of the grid showing the solution, if one exists.  For example:
+<pre>******
+*1275*
+*3445*
+*..ZZ*
+*66..*
+******
+</pre>
+</li></ol>
+<p>
+For 10 points extra credit, allow an optional flag to be
+read in from the command line.  The flag is "-h".  This flag will
+cause output to be placed in an html file as well as to the
+normal output to standard output.  The html filename
+will be the same as the input data filename with the file extension
+of ".html".  The output in the html file should contain the same
+information as the standard ouput, but it should be formatted better.
+The grid(s) in this html file should use html tag
+of &lt;table&gt; as was shown in the write-up of this assignment.
+The list of moves should show the information is some neat 
+arrangement.  How you do this is left completely up to you (do not
+expect hints from either the instructor or the TA).
+</p><p>
+For 15 points extra credit, you can have your solution be displayed
+in a Java GUI window in addition to displaying the output to standard
+output.  You should display the initial layout of the puzzle, the
+steps for the solution and the final solution of the puzzle.
+
+</p><p>
+Your program is to take full advantage of the Java Collection 
+Classes.  This library contains classes for a number of data
+structures that can be used in solving this problem.  The idea
+is "why write your own code if someone else already has done it".
+This is not to be taken to the extreme of "borrowing code" from
+fellow class members. 
+
+
+</p><p>
+To store your data, you will need to create a class to hold
+each piece.  The puzzle will be a collection of these pieces.
+Since the number of pieces is unknown, this should be dynamic.
+The use of the Collection classes of
+<b>
+<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Vector.html">
+Vector</a></b> or <b>
+<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/ArrayList.html">
+ArrayList</a></b> would be a good choice here.  When trying to
+find the shortest number of moves, the breadth-first search
+algorithm will work.  Since the breadth-first search uses a
+queue, the use of the <b>
+<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Queue.html">
+Queue Interface</a> of the 
+<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/LinkedList.html">
+LinkedList class</a></b> is good
+choice when implementing a breadth-first search.
+</p><p>
+A good algorithm to solve this problem is to create a class
+that will hold a "snapshot" of the puzzle.  A snapshot is to 
+contain all needed information about the "current" state of the
+puzzle.  The current state is the current position of all pieces 
+in the puzzle and what moves it took to reach the current state
+from the initial state.  So the snapshot needs two main sets of
+data: the pieces with their positions and a list of moves.  The
+initial state/snapshot is the position of the pieces as given in the input 
+file and zero moves (an empty move list).  Then all of the 
+snapshots that could be created from moving a single piece
+from the initial snapshot are added  onto a queue (be sure
+to add the move information to the list of moves).  If moving
+the piece causes piece Z to move to the right-most column of
+the puzzle, the puzzle is solved and the move list which contains
+the solution is printed.  Then the first snapshot is removed
+from the queue and all of the snapshots that could be created 
+from moving a single piece from this snapshot are added  onto the 
+queue.  If we attempt to remove a snapshot from the queue and
+the queue is empty, the puzzle has no solution.
+</p><p>
+Of course, we have to make sure that arrangement of pieces
+only is added  onto the queue one time; otherwise, we may get into
+an infinite loop.  One way you do this is to create a simplified 
+version of the current layout of the pieces and to store and
+compare this simplified version using an Implementation of the <b>
+<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Set.html">
+Set interface</a></b> like <b>
+<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/HashSet.html">
+HashSet</a></b> or <b>
+<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/TreeSet.html">
+TreeSet</a></b>.
+One way to create a simplied version is to create a string from the
+puzzle.  The string would have (# of rows)x(# of column) characters
+and the first (row-length)-th character would have the piece names from the
+first row (using a space character for an empty position in the puzzle.
+, the second (row-length)-th characters would have the
+piece names from the second row...  For example the initial
+puzzle from above would have the following 16 character string:
+</p><pre>	"12  3 44ZZ5 6657"
+</pre>
+and the solution of the puzzle would have the following 16 character string:
+<pre>	"12753445  ZZ66  "
+</pre>
+This idea is nice, since comparisons are already defined for strings,
+we don't have to make up some complicated algorithm to determine
+if two snapshots have all of their pieces in the same positions.
+<p>
+What are the possible first moves from the initial puzzle shown
+above?  The first piece I would check would be the Z piece, since
+moving that piece determines if the puzzle is solved and if a solution
+is found, the remaining pieces don't have to be moved.  The following
+is a piece by piece listing of the first moves from the inital puzzle:
+</p><ul>
+<li>Piece Z
+<ul>
+<li>Can not be moved
+</li></ul>
+</li><li>Piece 1
+<ul>
+<li>Can not be moved
+</li></ul>
+</li><li>Piece 2
+<ul>
+<li>Move down 1 space
+</li><li>Move right 1 space
+</li><li>Move right 2 spaces
+</li></ul>
+</li><li>Piece 3
+<ul>
+<li>Move right 1 space
+</li></ul>
+</li><li>Piece 4
+<ul>
+<li>Move up 1 space
+</li><li>Move left 1 space
+</li></ul>
+</li><li>Piece 5
+<ul>
+<li>Can not be moved
+</li></ul>
+</li><li>Piece 6
+<ul>
+<li>Can not be moved
+</li></ul>
+</li><li>Piece 7
+<ul>
+<li>Move up 1 space
+</li></ul>
+</li></ul>
+Therefore, after the first initial snapshot is taken care of, the
+queue should have 7 snapshots on it.  One for each of the moves
+mentioned above.
+
+<p>
+
+</p><h3>Programming Style Grading Criteria</h3>
+
+The programming style grade is worth 1% of the final grade for each
+assignment.  Thus the functionality of each assignment is only worth
+4% of the final grade.  The programming style grade will have a maximum
+score of 45 and will be graded based on the following criteria.
+<p>
+<table border="1">
+<tbody><tr><th>Points</th><th>Description
+            </th></tr><tr valign="top">
+              <td align="left" width="20"><strong>5</strong>
+              </td><td>Title
+page short header: The front page of your program must have a header
+with your name, course, TA, data, system, and a short description of
+the program, such as: <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/** ---------------------------------------------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* This program implements a calculator that does addition subtraction, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* multiplication, and division.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Class: CS 340, Spring 2005<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* System: NetBeans IDE, jsdk 1.4.2, Windows XP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* @author Dale Reed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* @version January 16, 2004 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/
+            </td></tr><tr valign="top">
+                <td align="left"><strong>10</strong>
+                </td><td>Title page(s) complete description: Following the 
+above short header, you should give a detailed 
+description of what this program does (2 paragraphs minimum). 
+This should be followed by an 
+intuitive description of <em>how</em> you implement your solution, 
+including a description of principal data structures and modules or 
+sections of code. Any extra credit work should be explicitly documented. 
+This section should also include directions on the compilation and execution
+of your program.  
+                <p>This should include a section called <b>Status</b>: 
+Elements of the assignment that do not work should be well documented here. 
+If some assigned element of your program does not work and <em>you fail to 
+document this</em>, <b>you could lose double the points for this than you 
+would have otherwise</b>. 
+</p><p>
+You may wish to write all this information into a separate 
+README file.  This should be done especially when the program has
+multiple source code files.
+            </p></td></tr><tr valign="top">
+              <td align="left"><strong>5</strong>
+              </td><td>Meaningful
+Identifier Names: Identifier names should indicate their purpose. Names
+should be words separated using capitalization, such as gradesSum.
+Short loops of ~ 5 lines can use loop counter variables such as i or j.
+</td></tr><tr valign="top">
+                <td align="left"><strong>10</strong>
+                </td><td>Comments.
+Every function must have a short description stating the purpose of the
+function, what it receives, and what it returns. Comments should be
+easily identifiable. I should be able to understand your program by
+reading only the comments. Also include a header at the top of your
+program (see example below) that <i>must</i> include lab day and TA name. 
+            </td></tr><tr valign="top">
+
+                  <td align="left"><strong>5</strong>
+                  </td><td>Decomposition:
+A segment of code that appears more than once should be extracted to
+form a separate method (in Java) or function (in C). Methods/Functions
+should be no longer than around 50 lines. Objects are used
+appropriately. </td></tr><tr valign="top">
+                    <td align="left"><strong>5</strong>
+                    </td><td>Appropriate
+data and control structures: Global variables should be avoided and
+used only when necessary. Method/Function parameters should be used
+instead. Appropriate looping and decision structures used. </td></tr><tr valign="top">
+                      <td align="left"><strong>5</strong>
+                      </td><td>Code
+Layout: Different nested levels should have different indentation,
+where statements at the same level should have the same indentation.
+Indent at least 3 spaces. Use either spaces or tabs consistently. </td></tr></tbody></table>
+
+</p><p>
+</p><h3>How to turn in your work</h3>
+Your program is to be submitted electronically via the <b>turnin</b> 
+command on the LINUX machines.  The project name for this is <b>mp4</b>. 
+All programs are expected to be written in good programming style. 
+<p>Turnin your program electronically using the "turnin" command <i>from 
+your CS account </i>as follows:</p>
+
+<blockquote>
+  <code>turnin -c cs340 -p mp4&nbsp; [your project directory]</code>
+</blockquote>
+where the [your project directory] is the directory name under which you have 
+all your files related to this programming problem. The turnin command will 
+automatically compress the data under your directory, so there is no need to do 
+the compression by yourself.
+<p><font color="#008080">Notice you can only invoke turnin command on the Linux 
+machines in the lab or after logging into the server machine oscar.cs.uic.edu.</font></p>
+<p><br>
+If you want to verify that your project was turned in, look in the turnin 
+directory for a file with your userid. For instance for this project, from your 
+CS account you would type:<br>
+&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp; turnin -c cs340 -p mp4 -v</p>
+
+
+</body></html>

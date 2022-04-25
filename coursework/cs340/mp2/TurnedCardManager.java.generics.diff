@@ -1,0 +1,20 @@
+21c21
+< 	private Vector turnedCards;			// list of turned non-matching cards
+---
+> 	private Vector<Card> turnedCards;			// list of turned non-matching cards
+36c36
+< 		this.turnedCards = new Vector(2);
+---
+> 		this.turnedCards = new Vector <Card>(2);
+57,58d56
+< 			// get the other card (which was already turned up)
+< 			Card otherCard = (Card)this.turnedCards.get(0);
+60c58
+< 			if( otherCard.getNum() == card.getNum())
+---
+> 			if( this.turnedCards.get(0).getNum() == card.getNum())
+102,103c100
+< 			Card card = (Card)this.turnedCards.get(i);
+< 			card.turnDown();
+---
+> 			this.turnedCards.get(i).turnDown();

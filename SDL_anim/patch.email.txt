@@ -1,0 +1,81 @@
+This is my first post to this mailing list.  In this email I will detail a 
+bug in the behavior of resizable SDL windows.  Then I will explain the 
+solution and provide a patch.
+
+Symptoms:
+
+Under Windows, an SDL display created with the SDL_RESIZABLE flag will 
+exhibit quirky behavior when maximizing the window.  The window is resized 
+to the proper size, but it is shifted upwards about half the height of the 
+title bar.  Similarly, a window whose origin is above the top of the 
+screen will spontaneously move its upper-left origin when it is resized.  
+After two such spontaneous resize-induced moves, the title bar will be 
+entirely off screen.  Subsequently, the window will shrink its height 
+spontaneously when the mouse is clicked and released on the window border.  
+This height shrinkage occurs even if the user did not resize the border.
+
+To observe this curious situation, please invoke:
+SDL-1.2.8/test/testwm.exe -resize
+
+Cause:
+
+A pair of integers, SDL_windowX and SDL_windowY, are defined in 
+video/wincommon/SDL_sysevents.c.  They are used by the DirectX video 
+driver and the DIB video driver:
+video/windx5/SDL_dx5video.c
+video/windib/SDL_dibvideo.c
+As I understand the source code, the primary use of these variables is to 
+create a rectangle that represents the surface area in CLIENT SPACE.  
+Client space refers to a coordinate system that originates at the upper 
+left corner of a Win32 Window's drawable area.  This is just inside the 
+window border and title bar.  This client space rectangle, called bounds, 
+is subsequently converted to screen space with a call to 
+AdjustWindowRectEx.  The problem is found in SDL's handling of the 
+WM_WINDOWPOSCHANGED message.  According to MSDN,
+
+  "The WM_WINDOWPOSCHANGED message is sent to a window whose 
+   size, position, or place in the Z order has changed as a 
+   result of a call to the SetWindowPos function or another
+   window-management function."
+
+I have confirmed that this message is indeed being sent to the SDL window 
+when the mouse is clicked on the window border, even if the window border 
+is not dragged.
+
+In video/wincommon/SDL_sysevents.c, on line 464, in response to the 
+WM_WINDOWPOSCHANGED message, the (potentially) new client rectangle is 
+obtained.  This rectangle is then translated into screen coordinates and 
+THEN assigned to the SDL_windowX and Y variables.  Thus screen coordinates 
+are being assigned to our client coordinate variables.  Once this is 
+understood, the solution is apparent:  assign SDL_windowX and Y before 
+translating the rectangle to screen coordinates.  This is accomplished by 
+the following patch.
+
+Sincerely,
+
+Michael
+
+Michael Leonhard
+########@tamale.net
+
+$ diff -u SDL_sysevents.c 
+/home/Michael/SDL-1.2.8/src/video/wincommon/SDL_sysevents.c
+--- SDL_sysevents.c     Thu Feb 19 02:22:09 2004
++++ /home/Michael/SDL-1.2.8/src/video/wincommon/SDL_sysevents.c Tue Feb 15 
+20:17:19 2005
+@@ -462,12 +462,10 @@
+                        int w, h;
+ 
+                        GetClientRect(SDL_Window, &SDL_bounds);
++                       SDL_windowX = SDL_bounds.left;
++                       SDL_windowY = SDL_bounds.top;
+                        ClientToScreen(SDL_Window, (LPPOINT)&SDL_bounds);
+                        ClientToScreen(SDL_Window, (LPPOINT)&SDL_bounds+1);
+-                       if ( SDL_bounds.left || SDL_bounds.top ) {
+-                               SDL_windowX = SDL_bounds.left;
+-                               SDL_windowY = SDL_bounds.top;
+-                       }
+                        w = SDL_bounds.right-SDL_bounds.left;
+                        h = SDL_bounds.bottom-SDL_bounds.top;
+                        if ( this->input_grab != SDL_GRAB_OFF ) {
+
