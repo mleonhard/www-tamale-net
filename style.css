@@ -1,12 +1,10 @@
 body {
-  background: #f0f0f0;
   font-family: Arial, Helvetica, sans-serif;
-  text-align: center;
 }
 
 .page {
   text-align: left;
-  width: 66%;
+  max-width: 44rem;
   /* top right bottom left */
   margin: 0 auto 0 auto;
 }
